@@ -1,100 +1,138 @@
-import Image from "next/image";
+"use client";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useLayoutEffect,
+} from "react";
+import { WalletTgSdk } from "@uxuycom/web3-tg-sdk";
+import { ethers } from "ethers";
+import { approveABI, CHAINS, erc20Abi } from "@/config/index.js";
+
+const DEFAULT_CHAIN_ID = "0x38"; // BSC
+const KEY_STORE = {
+  Cache_BSC: "Cache_BSC",
+};
+const walletTgSdk = new WalletTgSdk();
+const { ethereum } = walletTgSdk;
+
+const defaultChainConfig = CHAINS.find(
+  (chain) => String(chain?.chainId) === DEFAULT_CHAIN_ID
+);
 
 export default function Home() {
+  const [chainId, setChainId] = useState("0x1");
+  const [address, setAddress] = useState("");
+  const [btnLoadingConnect, setBtnLoadingConnect] = useState(false);
+
+  const init = async () => {
+    window?.Telegram?.WebApp?.expand?.();
+
+    const accounts = await ethereum.request({
+      method: "eth_accounts",
+      params: [],
+    });
+    const chainId = await ethereum.request({
+      method: "eth_chainId",
+      params: [],
+    });
+    const isConnected = accounts[0];
+    setChainId(chainId);
+    setAddress(accounts[0]);
+    initEventListener();
+    isConnected && switchChain(DEFAULT_CHAIN_ID);
+  };
+
+  function initEventListener() {
+    // events
+    ethereum.removeAllListeners();
+    function handleAccountsChanged(accounts) {
+      setAddress(accounts[0]);
+    }
+    function handleChainChanged(_chainId) {
+      setChainId("0x" + Number(_chainId).toString(16));
+    }
+
+    ethereum.on("accountsChanged", handleAccountsChanged);
+    ethereum.on("chainChanged", handleChainChanged);
+  }
+
+  useLayoutEffect(() => {
+    init();
+  }, []);
+
+  useEffect(() => {
+    if (!chainId) {
+      return;
+    }
+    const chainConfig = CHAINS.find(
+      (chain) => parseInt(chain?.chainId) == parseInt(chainId)
+    );
+    if (!chainConfig) {
+      return;
+    }
+    const RPC_URL = chainConfig?.chainRPCs?.[0] || "";
+  }, [chainId]);
+
+  const connectWallet = async () => {
+    console.log("ethereum Hello", ethereum);
+    setBtnLoadingConnect(true);
+    try {
+      await ethereum.request({
+        method: "eth_requestAccounts",
+        params: [],
+      });
+
+      const accounts = await ethereum.request({
+        method: "eth_accounts",
+        params: [],
+      });
+
+      const chainId = await ethereum.request({
+        method: "eth_chainId",
+        params: [],
+      });
+      setAddress(accounts[0]);
+      setChainId(chainId);
+      switchChain(DEFAULT_CHAIN_ID);
+
+
+      console.log("Connected:", accounts[0],chainId);
+    } catch (error) {
+      console.error("Connection failed:", error);
+    }
+    setBtnLoadingConnect(false);
+  };
+
+  // Switch chian Event
+  const switchChain = async (chainId) => {
+    try {
+      await ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: chainId }],
+      });
+      console.log("Chain switch successful");
+    } catch (error) {
+      console.error("Chain switch failed:", error);
+      console.error("Chain switch failed:", error.message);
+    }
+  };
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+        <p className="mb-2">Arcade Games !!!</p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+        <button
+          className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          onClick={connectWallet}
+        >
+          Connect Wallet
+        </button>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+        Nikku.Dev
       </footer>
     </div>
   );

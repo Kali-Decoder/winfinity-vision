@@ -11,7 +11,9 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.0.4"
+    "next": "15.0.4",
+    "@uxuycom/web3-tg-sdk": "^0.0.5",
+    "ethers": "^6.13.2"
   },
   "devDependencies": {
     "postcss": "^8",

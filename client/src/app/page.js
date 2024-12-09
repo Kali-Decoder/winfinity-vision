@@ -10,32 +10,31 @@ const KEY_STORE = {
   Cache_BSC: "Cache_BSC",
 };
 const walletTgSdk = new WalletTgSdk();
-const { ethereum } = walletTgSdk;
-
-const defaultChainConfig = CHAINS.find(
-  (chain) => String(chain?.chainId) === DEFAULT_CHAIN_ID
-);
 
 export default function Home() {
   const [chainId, setChainId] = useState("0x1"); // Default to Ethereum Mainnet
   const [address, setAddress] = useState("");
   const [btnLoadingConnect, setBtnLoadingConnect] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Ensure the component knows it's running on the client
+    setIsClient(true);
+  }, []);
 
   const init = async () => {
-    if (typeof window === "undefined") {
-      console.log("Oops, `window` is not defined");
+    if (!isClient) {
+      console.log("Not running in the client environment");
       return;
     }
 
-    // Expand Telegram WebApp (if applicable)
-    window.Telegram?.WebApp?.expand?.();
+    const { ethereum } = walletTgSdk;
 
     try {
       const accounts = await ethereum.request({
         method: "eth_accounts",
       });
 
-      console.log("accounts", accounts);
       const chainId = await ethereum.request({
         method: "eth_chainId",
       });
@@ -53,12 +52,19 @@ export default function Home() {
   };
 
   function initEventListener() {
+    const { ethereum } = walletTgSdk;
+
+    if (!ethereum) {
+      console.error("Ethereum provider not found");
+      return;
+    }
+
     // Remove existing listeners to avoid duplicates
     ethereum.removeAllListeners();
 
     // Account and chain change handlers
     const handleAccountsChanged = (accounts) => {
-      setAddress(accounts[0]);
+      setAddress(accounts[0] || "");
     };
 
     const handleChainChanged = (_chainId) => {
@@ -70,12 +76,14 @@ export default function Home() {
     ethereum.on("chainChanged", handleChainChanged);
   }
 
-  useLayoutEffect(() => {
-    init();
-  }, []);
+  useEffect(() => {
+    if (isClient) {
+      init();
+    }
+  }, [isClient]);
 
   useEffect(() => {
-    if (!chainId) {
+    if (!chainId || !isClient) {
       return;
     }
 
@@ -91,10 +99,16 @@ export default function Home() {
     const RPC_URL = chainConfig?.chainRPCs?.[0] || "";
 
     console.log("RPC_URL", RPC_URL, chainId);
-  }, [chainId]);
+  }, [chainId, isClient]);
 
   const connectWallet = async () => {
-    console.log("Connecting wallet...");
+    if (!isClient) {
+      console.error("Not running in the client environment");
+      return;
+    }
+
+    const { ethereum } = walletTgSdk;
+
     try {
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
@@ -115,6 +129,13 @@ export default function Home() {
   };
 
   const switchChain = async (targetChainId) => {
+    if (!isClient) {
+      console.error("Not running in the client environment");
+      return;
+    }
+
+    const { ethereum } = walletTgSdk;
+
     try {
       await ethereum.request({
         method: "wallet_switchEthereumChain",

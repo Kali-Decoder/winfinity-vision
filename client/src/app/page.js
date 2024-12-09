@@ -2,8 +2,6 @@
 import React, {
   useState,
   useEffect,
-  useMemo,
-  useCallback,
   useLayoutEffect,
 } from "react";
 import { WalletTgSdk } from "@uxuycom/web3-tg-sdk";
@@ -28,11 +26,12 @@ export default function Home() {
 
   const init = async () => {
     window?.Telegram?.WebApp?.expand?.();
-
     const accounts = await ethereum.request({
       method: "eth_accounts",
       params: [],
     });
+
+    console.log("accounts", accounts);
     const chainId = await ethereum.request({
       method: "eth_chainId",
       params: [],
@@ -73,16 +72,20 @@ export default function Home() {
       return;
     }
     const RPC_URL = chainConfig?.chainRPCs?.[0] || "";
+
+    console.log("RPC_URL", RPC_URL,chainId);
   }, [chainId]);
 
   const connectWallet = async () => {
     console.log("ethereum Hello", ethereum);
-    setBtnLoadingConnect(true);
+ 
     try {
       await ethereum.request({
         method: "eth_requestAccounts",
         params: [],
       });
+
+      console.log("Connected:", acc);
 
       const accounts = await ethereum.request({
         method: "eth_accounts",
@@ -102,7 +105,7 @@ export default function Home() {
     } catch (error) {
       console.error("Connection failed:", error);
     }
-    setBtnLoadingConnect(false);
+  
   };
 
   // Switch chian Event
@@ -132,7 +135,7 @@ export default function Home() {
         </button>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        Nikku.Dev
+        Nikku.Dev {chainId} {address}
       </footer>
     </div>
   );

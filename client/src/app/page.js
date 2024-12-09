@@ -1,4 +1,5 @@
 "use client";
+
 import React, {
   useState,
   useEffect,
@@ -25,7 +26,10 @@ export default function Home() {
   const [btnLoadingConnect, setBtnLoadingConnect] = useState(false);
 
   const init = async () => {
-    window?.Telegram?.WebApp?.expand?.();
+    // if (typeof window === "undefined") {
+    //   console.log("Oops, `window` is not defined")
+    // }
+    // window?.Telegram?.WebApp?.expand?.();
     const accounts = await ethereum.request({
       method: "eth_accounts",
       params: [],

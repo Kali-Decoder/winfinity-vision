@@ -1,30 +1,33 @@
 "use client";
 
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import { WalletTgSdk } from "@uxuycom/web3-tg-sdk";
+import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic"; // Ensures client-side loading of components
 import { ethers } from "ethers";
 import { approveABI, CHAINS, erc20Abi } from "@/config/index.js";
 
+// Dynamically import WalletTgSdk to prevent server-side execution
+const WalletTgSdk = dynamic(
+  () => import("@uxuycom/web3-tg-sdk").then((mod) => mod.WalletTgSdk),
+  { ssr: false } // Disable server-side rendering
+);
+
 const DEFAULT_CHAIN_ID = "0x38"; // BSC
-const KEY_STORE = {
-  Cache_BSC: "Cache_BSC",
-};
-const walletTgSdk = new WalletTgSdk();
 
 export default function Home() {
   const [chainId, setChainId] = useState("0x1"); // Default to Ethereum Mainnet
   const [address, setAddress] = useState("");
   const [btnLoadingConnect, setBtnLoadingConnect] = useState(false);
-  const [isClient, setIsClient] = useState(false);
+  const [walletTgSdk, setWalletTgSdk] = useState(null);
 
   useEffect(() => {
-    // Ensure the component knows it's running on the client
-    setIsClient(true);
+    // Initialize WalletTgSdk only on the client
+    const sdk = new WalletTgSdk();
+    setWalletTgSdk(sdk);
   }, []);
 
   const init = async () => {
-    if (!isClient) {
-      console.log("Not running in the client environment");
+    if (!walletTgSdk) {
+      console.error("Wallet SDK not initialized");
       return;
     }
 
@@ -41,7 +44,7 @@ export default function Home() {
 
       setChainId(chainId);
       setAddress(accounts[0]);
-      initEventListener();
+      initEventListener(ethereum);
 
       if (accounts[0]) {
         switchChain(DEFAULT_CHAIN_ID);
@@ -51,59 +54,32 @@ export default function Home() {
     }
   };
 
-  function initEventListener() {
-    const { ethereum } = walletTgSdk;
-
+  const initEventListener = (ethereum) => {
     if (!ethereum) {
       console.error("Ethereum provider not found");
       return;
     }
 
-    // Remove existing listeners to avoid duplicates
     ethereum.removeAllListeners();
 
-    // Account and chain change handlers
-    const handleAccountsChanged = (accounts) => {
+    ethereum.on("accountsChanged", (accounts) => {
       setAddress(accounts[0] || "");
-    };
+    });
 
-    const handleChainChanged = (_chainId) => {
+    ethereum.on("chainChanged", (_chainId) => {
       setChainId("0x" + Number(_chainId).toString(16));
-    };
-
-    // Attach new listeners
-    ethereum.on("accountsChanged", handleAccountsChanged);
-    ethereum.on("chainChanged", handleChainChanged);
-  }
+    });
+  };
 
   useEffect(() => {
-    if (isClient) {
+    if (walletTgSdk) {
       init();
     }
-  }, [isClient]);
-
-  useEffect(() => {
-    if (!chainId || !isClient) {
-      return;
-    }
-
-    const chainConfig = CHAINS.find(
-      (chain) => parseInt(chain?.chainId) === parseInt(chainId)
-    );
-
-    if (!chainConfig) {
-      console.warn("Unknown chain ID:", chainId);
-      return;
-    }
-
-    const RPC_URL = chainConfig?.chainRPCs?.[0] || "";
-
-    console.log("RPC_URL", RPC_URL, chainId);
-  }, [chainId, isClient]);
+  }, [walletTgSdk]);
 
   const connectWallet = async () => {
-    if (!isClient) {
-      console.error("Not running in the client environment");
+    if (!walletTgSdk) {
+      console.error("Wallet SDK not initialized");
       return;
     }
 
@@ -129,8 +105,8 @@ export default function Home() {
   };
 
   const switchChain = async (targetChainId) => {
-    if (!isClient) {
-      console.error("Not running in the client environment");
+    if (!walletTgSdk) {
+      console.error("Wallet SDK not initialized");
       return;
     }
 

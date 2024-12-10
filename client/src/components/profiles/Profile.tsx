@@ -84,19 +84,7 @@ const Profile = () => {
       className='flex min-h-screen flex-col overflow-hidden text-white'
       style={{ backgroundColor: 'transparent' }}
     >
-      <div className='flex flex-grow flex-col items-center gap-3 overflow-y-auto px-4'>
-        <NextImage
-          src='/images/demo-profile.png'
-          alt='Image placeholder'
-          className='relative h-32 w-32 rounded-full border-4 border-primary-500'
-          imgClassName='object-cover rounded-full'
-          fill
-        />
-        <span className='mt-4 block text-3xl'>
-          {address ? address : 'Nikku.Dev'}
-        </span>
-      </div>
-
+      
       {createPortal(<Menu />, document.body)}
     </div>
   );

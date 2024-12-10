@@ -16,10 +16,10 @@ export const menuItems = [
   // },
   {
     name: 'payment',
-    icon: <MoneyBag />,
-  },
-  {
-    name: 'profile',
     icon: <IoPersonOutline />,
   },
+  // {
+  //   name: 'profile',
+  //   icon: <IoPersonOutline />,
+  // },
 ] as const;

@@ -4,7 +4,7 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { RiContactsLine } from 'react-icons/ri';
 import Button from '@/components/buttons/Button';
 import NextImage from '@/components/NextImage';
-import QRCodeInvitation from '@/features/Game/components/qr-code-invitation/QRCodeInvitation';
+
 import { friends as initialFriends } from '@/features/Game/constants/friends';
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 
@@ -101,9 +101,7 @@ const InviteFriends = ({ setOpen }: Props) => {
   };
 
   const renderInviteFriends = () => {
-    if (showQrCodeInvitation) {
-      return <QRCodeInvitation />;
-    }
+   
     return main();
   };
 

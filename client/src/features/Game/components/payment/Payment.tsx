@@ -11,11 +11,11 @@ import TabPanel from '@/components/tabs/TabPanel';
 import TabPanels from '@/components/tabs/TabPanels';
 import Tabs from '@/components/tabs/Tabs';
 
-import Currency from '@/features/Game/components/currency/Currency';
 import InputSvg from '@/features/Game/components/payment/InputSVG';
 import OutputSVG from '@/features/Game/components/payment/OutputSVG';
 import PaymentTypes from '@/features/Game/components/payment/PaymentTypes';
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
+import NextImage from '@/components/NextImage';
 
 const Payment = () => {
   const { userTokenBalance, userDepositedBalance, poolBalance } =
@@ -77,6 +77,16 @@ const Payment = () => {
             </div>
           </Tab>
         </Tabs>
+        <div className='flex flex-grow flex-col items-center gap-3 overflow-y-auto px-4'>
+          <NextImage
+            src='/images/demo-profile.png'
+            alt='Image placeholder'
+            className='relative h-32 w-32 rounded-full border-4 border-primary-500'
+            imgClassName='object-cover rounded-full'
+            fill
+          />
+          <span className='mt-4 block text-3xl'>{'Nikku.Dev'}</span>
+        </div>
 
         <div className='text-gradient-primary mt-10 flex items-center justify-center gap-2'>
           <h2 className='text-8xl'>234</h2>
@@ -87,7 +97,6 @@ const Payment = () => {
           <TabPanel>
             <PaymentTypes />
           </TabPanel>
-         
         </TabPanels>
       </TabGroup>
     </div>

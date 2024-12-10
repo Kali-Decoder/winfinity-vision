@@ -6,7 +6,6 @@ import { CiMedal } from 'react-icons/ci';
 import { IoDiamondOutline } from 'react-icons/io5';
 import { RiVipCrownLine } from 'react-icons/ri';
 
-
 import Account from '@/components/account/Account';
 import TextField from '@/components/inputs/TextField';
 import Menu from '@/components/menu/Menu';
@@ -31,7 +30,6 @@ const LeaderBoard = () => {
   const [uploadedVideos, setUploadedVideos] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
 
-
   const main = () => {
     return (
       <div>
@@ -52,10 +50,7 @@ const LeaderBoard = () => {
                 fill
               />
             )}
-
           </div>
-
-          
         </div>
 
         {/* StoryBar below the search bar */}
@@ -150,14 +145,15 @@ const LeaderBoard = () => {
             </Tabs>
           )}
           <TabPanels>
-           
-              {/* <NFTS
+            <TabPanel>
+              <NFTS
                 setShowNFTPreview={setShowNFTPreview}
                 setNFTFlowId={setNFTFlowId}
-              /> */}
+              />
+            </TabPanel>
 
-              {/* Display Uploaded Videos */}
-              {/* {uploadedVideos.length > 0 && (
+            {/* Display Uploaded Videos */}
+            {/* {uploadedVideos.length > 0 && (
                 <div className='mx-auto my-10 overflow-hidden rounded-2xl sm:w-[26rem] sm:max-w-lg'>
                   <div className='mt-4 flex flex-col items-center gap-6'>
                     {uploadedVideos.map((video, index) => (
@@ -184,7 +180,7 @@ const LeaderBoard = () => {
                   </div>
                 </div>
               )} */}
-          
+
             <TabPanel>
               <Account />
               <LeaderBoardTable

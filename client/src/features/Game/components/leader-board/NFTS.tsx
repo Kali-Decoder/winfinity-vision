@@ -2,7 +2,13 @@ import React from 'react';
 
 import NFTThumbnail from '@/features/Game/components/NFTThumbnail';
 import { games, user } from '@/features/Game/constants/user';
-const NFTS = () => {
+
+type Props = {
+  setShowNFTPreview: React.Dispatch<React.SetStateAction<boolean>>;
+  setNFTFlowId: React.Dispatch<React.SetStateAction<string | undefined>>;
+};
+
+const NFTS = ({ setShowNFTPreview, setNFTFlowId }: Props) => {
   return (
     <div className='space-y-0'>
       {games.map((NFTId, index) => {

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useAccount } from 'wagmi';
 
-import WorldIdKit from '@/components/buttons/WorldIdKit';
+
 import Carousel from '@/components/carousel/Carousel';
 import Menu from '@/components/menu/Menu';
 import Profile from '@/components/profiles/Profile';
@@ -26,7 +25,7 @@ import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import { useTabsContext } from '@/features/Game/contexts/TabsContext';
 
 const Game = () => {
-  useAccount();
+
   const {
     setActiveStep: setActiveQuizStep,
     setPreQuestions,
@@ -81,7 +80,7 @@ const Game = () => {
     return (
       <>
         <section className='mb-3 max-w-[95vw] space-y-9 mobile-demo:w-[450px]'>
-          <WorldIdKit />
+ 
 
           {/* Trending and Tier Quizzes */}
           <TabPanel className='space-y-9'>

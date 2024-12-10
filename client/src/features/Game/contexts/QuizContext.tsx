@@ -1,32 +1,12 @@
-import { BigNumber, ethers } from 'ethers';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { useAccount, useNetwork } from 'wagmi';
-
-import {
-  mainContractABI,
-  mainContractAddress,
-  tokenAbi,
-  tokenAddress,
-} from '@/contract-constant';
 import {
   NFTInfo,
   PreQuestions,
   Question,
   Quiz,
 } from '@/features/Game/types/Types';
-import { useEthersSigner } from '@/utils/signer';
 
 import { PostQuestions } from '../types/Types';
-
-interface DepositFundsParams {
-  amount: BigNumber;
-  poolId: number;
-}
-
-interface WithdrawFundsParams {
-  amount: BigNumber;
-  poolId: number;
-}
 
 type QuizContext = {
   activeQuiz: boolean;
@@ -46,18 +26,10 @@ type QuizContext = {
   setNFTInfo: React.Dispatch<React.SetStateAction<NFTInfo>>;
 
   reset: () => void;
-  depositFunds: ({
-    amount,
-    poolId,
-  }: DepositFundsParams) => Promise<ethers.ContractTransaction | undefined>;
+
   userTokenBalance: string;
   userDepositedBalance: string;
   poolBalance: string;
-  makeRefferal: () => Promise<ethers.ContractTransaction | undefined>;
-  withdrawlFunds: ({
-    amount,
-    poolId,
-  }: WithdrawFundsParams) => Promise<ethers.ContractTransaction | undefined>;
 };
 
 export const QuizContext = React.createContext<QuizContext>({} as QuizContext);
@@ -71,130 +43,11 @@ export const useQuizContext = () => {
 };
 
 const QuizContextProvider = ({ children }: { children: ReactNode }) => {
-  const { address } = useAccount();
-  const { chains, chain } = useNetwork();
-  const [activeChain, setActiveChainId] = useState(chain?.id);
   const [userTokenBalance, setUserTokenBalance] = useState<string>('0');
   const [userDepositedBalance, setUserDepositedBalance] = useState<string>('0');
   const [poolBalance, setPoolBalance] = useState<string>('0');
-  useEffect(() => {
-    setActiveChainId(chain?.id);
-  }, [chain?.id]);
-  const signer = useEthersSigner({ chainId: activeChain });
 
-  useEffect(() => {
-    if (!signer) return;
-  }, [address, signer]);
 
-  const makeRefferal = async () => {
-    try {
-      const contractInstance = await getContractInstance(
-        mainContractAddress,
-        mainContractABI
-      );
-      if (contractInstance) {
-        const tx = await contractInstance.createUser();
-        await tx.wait();
-        return tx;
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  interface ContractInstance {
-    address: string;
-    abi: ethers.ContractInterface;
-    signer: ethers.Signer;
-  }
-
-  const getContractInstance = async (
-    contractAddress: string,
-    contractAbi: ethers.ContractInterface
-  ): Promise<ethers.Contract | undefined> => {
-    try {
-      const contractInstance: ethers.Contract = new ethers.Contract(
-        contractAddress,
-        contractAbi,
-        signer
-      );
-      return contractInstance;
-    } catch (error) {
-      console.log('Error in deploying contract');
-    }
-  };
-
-  interface DepositFundsParams {
-    amount: BigNumber;
-    poolId: number;
-  }
-
-  const depositFunds = async ({
-    amount,
-    poolId,
-  }: DepositFundsParams): Promise<ethers.ContractTransaction | undefined> => {
-    try {
-      const degoTokenContract = await getContractInstance(
-        tokenAddress,
-        tokenAbi
-      );
-      if (!degoTokenContract) return;
-
-      // Make amount as per decimals
-      amount = BigNumber.from(amount).mul(
-        BigNumber.from(10).pow(await degoTokenContract.decimals())
-      );
-      const approvetx = await degoTokenContract.approve(
-        mainContractAddress,
-        amount,
-        { from: address }
-      );
-
-      await approvetx.wait();
-
-      const contractInstance = await getContractInstance(
-        mainContractAddress,
-        mainContractABI
-      );
-      if (!contractInstance) return;
-
-      const tx = await contractInstance.deposit(amount, poolId, {
-        from: address,
-      });
-      await tx.wait();
-
-      return tx;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  interface WithdrawFundsParams {
-    amount: BigNumber;
-    poolId: number;
-  }
-
-  const withdrawlFunds = async ({
-    amount,
-    poolId,
-  }: WithdrawFundsParams): Promise<ethers.ContractTransaction | undefined> => {
-    try {
-      const contractInstance = await getContractInstance(
-        mainContractAddress,
-        mainContractABI
-      );
-
-      if (!contractInstance) return;
-
-      const tx = await contractInstance.withdraw(amount, poolId, {
-        from: address,
-      });
-      await tx.wait();
-
-      return tx;
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const [activeQuiz, setActiveQuiz] = useState(false);
   const [activeStep, setActiveStep] =
@@ -258,12 +111,9 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         NFTInfo,
         setNFTInfo,
         reset,
-        depositFunds,
         userTokenBalance,
         userDepositedBalance,
         poolBalance,
-        makeRefferal,
-        withdrawlFunds,
       }}
     >
       {children}

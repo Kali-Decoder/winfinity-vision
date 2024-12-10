@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 import { BsCalendarCheck } from 'react-icons/bs';
 import { RxCopy } from 'react-icons/rx';
-import { useAccount } from 'wagmi';
-import { ethers } from 'ethers';
 
 
 import Button from '@/components/buttons/Button';
@@ -21,7 +19,6 @@ import { addressFormatter } from '@/features/Game/lib/addressFormatter';
 
 const PaymentTypes = () => {
   const [copiedNotification, setCopiedNotification] = useState(false);
-  const { address } = useAccount();
   const [tokenBalance, setTokenBalance] = useState<string>('0');
   const [totalInvested, setTotalInvested] = useState<string>('0');
 
@@ -37,12 +34,6 @@ const PaymentTypes = () => {
     setTotalInvested('500'); // Example hardcoded value
   };
 
-  useEffect(() => {
-    if (address) {
-     
-      fetchTotalInvested();
-    }
-  }, [address]);
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -112,10 +103,10 @@ const PaymentTypes = () => {
                   rightIconClassName='text-primary-500 text-xl'
                   size='base'
                   className='w-full px-5 py-3 text-white'
-                  onClick={() => handleCopy(address ?? '')}
+                
                 >
                   <span className='mx-auto w-full'>
-                    {addressFormatter(address ?? '')}
+                    {addressFormatter('oxabcdeferreeeedd')}
                   </span>
                 </Button>
               </div>
@@ -127,9 +118,9 @@ const PaymentTypes = () => {
                   rightIconClassName='text-primary-500 text-xl'
                   size='base'
                   className='w-full px-5 py-3 text-white'
-                  onClick={() => handleCopy(`${tokenBalance}`)}
+                  onClick={() => handleCopy(`354`)}
                 >
-                  <span className='mx-auto w-full'>{tokenBalance}</span>
+                  <span className='mx-auto w-full'>345</span>
                 </Button>
               </div>
 

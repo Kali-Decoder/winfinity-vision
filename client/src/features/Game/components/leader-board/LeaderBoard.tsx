@@ -1,11 +1,11 @@
 import { Capacitor } from '@capacitor/core';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CiMedal } from 'react-icons/ci';
 import { IoDiamondOutline } from 'react-icons/io5';
 import { RiVipCrownLine } from 'react-icons/ri';
-import { useAccount } from 'wagmi';
+
 
 import Account from '@/components/account/Account';
 import TextField from '@/components/inputs/TextField';
@@ -29,16 +29,8 @@ const LeaderBoard = () => {
   const [showNFTPreview, setShowNFTPreview] = useState(false);
   const [NFTFlowId, setNFTFlowId] = useState<string | undefined>();
   const [uploadedVideos, setUploadedVideos] = useState([]);
-  const { address, isConnected } = useAccount(); // Get the wallet address
-  useEffect(() => {
-    // Load previously uploaded videos for this wallet from localStorage
-    const storedVideos = JSON.parse(
-      localStorage.getItem('uploadedVideos') || '{}'
-    );
-    if (address && storedVideos[address]) {
-      setUploadedVideos(storedVideos[address]);
-    }
-  }, [address]);
+  const [isConnected, setIsConnected] = useState(false);
+
 
   const main = () => {
     return (
@@ -61,7 +53,6 @@ const LeaderBoard = () => {
               />
             )}
 
-            <ConnectButton showBalance={false} />
           </div>
 
           

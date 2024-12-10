@@ -1,6 +1,5 @@
 import { Capacitor } from '@capacitor/core';
 import clsx from 'clsx';
-import { BigNumber } from 'ethers';
 import { useRef, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 
@@ -17,7 +16,7 @@ type Props = {
 };
 
 const NFTPreview = ({ setShowNFTPreview }: Props) => {
-  const { preQuestions, NFTInfo, depositFunds, poolBalance } = useQuizContext();
+  const { preQuestions, NFTInfo, poolBalance } = useQuizContext();
   const [showInfo, setShowInfo] = useState(false);
   const [makeBet, setMakeBet] = useState(0);
   //#region  //*=========== video state ===========
@@ -25,12 +24,7 @@ const NFTPreview = ({ setShowNFTPreview }: Props) => {
     useRef(null);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  //#endregion  //*======== video state ===========
 
-  const handleBetClick = async (amount: number) => {
-    await depositFunds({ amount: BigNumber.from(amount), poolId: 1 });
-    setShowNFTPreview(false);
-  };
 
   const handleMakeBet = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMakeBet(Number(e.target.value));
@@ -131,7 +125,7 @@ const NFTPreview = ({ setShowNFTPreview }: Props) => {
             <Button
               variant='dark'
               size='lg'
-              onClick={() => handleBetClick(makeBet)}
+              
               className='!mt-8'
             >
               Enter to Pool Bet

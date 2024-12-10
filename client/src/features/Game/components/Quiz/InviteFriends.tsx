@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { BiBarcodeReader } from 'react-icons/bi';
 import { BsArrowLeft } from 'react-icons/bs';
-import { RiContactsLine } from 'react-icons/ri';
 import Button from '@/components/buttons/Button';
 import NextImage from '@/components/NextImage';
 
 import { friends as initialFriends } from '@/features/Game/constants/friends';
-import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 
 type Friend = {
   imgSrc: string;
@@ -25,7 +22,7 @@ const InviteFriends = ({ setOpen }: Props) => {
   const [loadingStates, setLoadingStates] = useState<{
     [key: string]: boolean;
   }>({});
-  const { makeRefferal } = useQuizContext();
+
 
   const handleInvite = async (friendIndex: number) => {
     // Set loading state for this specific friend
@@ -33,7 +30,7 @@ const InviteFriends = ({ setOpen }: Props) => {
 
     try {
       // Call the original makeRefferal
-      await makeRefferal();
+  
 
       // Simulate a delay
       await new Promise((resolve) => setTimeout(resolve, 3000));

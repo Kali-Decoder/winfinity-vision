@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useUserBalance } from "@/context/UserBalanceContext";
+
 import {toast} from "react-hot-toast";
 
 
@@ -17,9 +17,9 @@ const GRID_SIZE = 20;
 const SQUARE_SIZE = 20;
 
 const SnakeGame: React.FC = () => {
-  const { deposit, stake, setDeposit, stakeAmount,setStake } = useUserBalance();
+  // const { deposit, stake, setDeposit, stakeAmount,setStake } = useUserBalance();
 
-  const total = deposit + stake;
+
   const [snake, setSnake] = useState<Position[]>([{ x: 5, y: 5 }]);
   const [food, setFood] = useState<Position>({ x: 10, y: 10 });
   const [direction, setDirection] = useState<"UP" | "DOWN" | "LEFT" | "RIGHT">("RIGHT");
@@ -117,7 +117,7 @@ const SnakeGame: React.FC = () => {
         if (reward) {
           reward = reward + 10;
         }
-        setDeposit(prevDeposit => prevDeposit + reward);
+        // setDeposit(prevDeposit => prevDeposit + reward);
       }
       setGameOver(true);
     } catch (error) {
@@ -136,11 +136,11 @@ const SnakeGame: React.FC = () => {
       setScore(0);
       setGameStarted(false);
   
-      if (deposit >= 10) {
-        setPlayModalOpen(true);
-      } else if (deposit === 0 && stake === 0) {
-        setInitialModalOpen(true);
-      }
+      // if (deposit >= 10) {
+      //   setPlayModalOpen(true);
+      // } else if (deposit === 0 && stake === 0) {
+      //   setInitialModalOpen(true);
+      // }
     } catch (error) {
       console.error("Error in restartGame:", error);
       toast.error("An error occurred while restarting the game.");
@@ -151,8 +151,8 @@ const SnakeGame: React.FC = () => {
     try {
       console.log("Selected amount:", amount);
       // await stakeAmount(amount);
-      setStake(prev => prev + amount);
-      setDeposit(prev => prev + amount);
+      // setStake(prev => prev + amount);
+      // setDeposit(prev => prev + amount);
       setInitialModalOpen(false);
       setPlayModalOpen(true);
     } catch (error) {
@@ -163,13 +163,13 @@ const SnakeGame: React.FC = () => {
   
   const handleConfirmPlay = () => {
     try {
-      if (deposit >= 10) {
-        setDeposit(prev => prev - 10);
-        setGameStarted(true);
-        setPlayModalOpen(false);
-      } else {
-        toast.error("Not enough deposit to play.");
-      }
+      // if (deposit >= 10) {
+      //   setDeposit(prev => prev - 10);
+      //   setGameStarted(true);
+      //   setPlayModalOpen(false);
+      // } else {
+      //   toast.error("Not enough deposit to play.");
+      // }
     } catch (error) {
       console.error("Error in handleConfirmPlay:", error);
       toast.error("An error occurred while confirming play.");
@@ -178,15 +178,15 @@ const SnakeGame: React.FC = () => {
   
   const handlePlayAgain = () => {
     try {
-      if (deposit >= 10) {
-        setPlayModalOpen(true);
-      } else {
-        if (deposit === 0 && stake === 0) {
-          setInitialModalOpen(true);
-        } else {
-          toast.error("Not enough deposit to play again.");
-        }
-      }
+      // if (deposit >= 10) {
+      //   setPlayModalOpen(true);
+      // } else {
+      //   if (deposit === 0 && stake === 0) {
+      //     setInitialModalOpen(true);
+      //   } else {
+      //     toast.error("Not enough deposit to play again.");
+      //   }
+      // }
       setPlayAgainModalOpen(false);
     } catch (error) {
       console.error("Error in handlePlayAgain:", error);
@@ -263,14 +263,14 @@ const SnakeGame: React.FC = () => {
     return () => clearInterval(interval);
   }, [snake, direction, gameOver, paused, gameStarted]);
 
-  useEffect(() => {
-    // If no funds at all, open deposit modal
-    if (deposit === 0 && stake === 0) {
-      setInitialModalOpen(true);
-    } else {
-      setInitialModalOpen(false);
-    }
-  }, [deposit, stake]);
+  // useEffect(() => {
+  //   // If no funds at all, open deposit modal
+  //   if (deposit === 0 && stake === 0) {
+  //     setInitialModalOpen(true);
+  //   } else {
+  //     setInitialModalOpen(false);
+  //   }
+  // }, [deposit, stake]);
 
   return (
     <div
@@ -284,11 +284,11 @@ const SnakeGame: React.FC = () => {
       <div className="mb-4 flex flex-wrap gap-4 justify-center text-center">
         <div className="flex flex-col items-center">
           <span className="text-sm text-gray-500">Deposit</span>
-          <span className="text-lg font-semibold text-green-500">{deposit.toFixed(2)} USD</span>
+          <span className="text-lg font-semibold text-green-500">224 USD</span>
         </div>
         <div className="flex flex-col items-center">
           <span className="text-sm text-gray-500">Stake</span>
-          <span className="text-lg font-semibold text-orange-500">{stake.toFixed(2)} USD</span>
+          <span className="text-lg font-semibold text-orange-500">224 USD</span>
         </div>
         <div className="flex flex-col items-center">
           <span className="text-sm text-gray-500">Score</span>
@@ -408,7 +408,7 @@ const SnakeGame: React.FC = () => {
       )}
 
       {/* Play Again Modal (replaces the bottom button) */}
-      {playAgainModalOpen && !gameOver && !gameStarted && deposit >= 10 && (
+      {playAgainModalOpen && !gameOver && !gameStarted  && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
             <h2 className="text-2xl font-semibold text-blue-500 mb-4 text-center ">Play Again?</h2>
@@ -426,11 +426,11 @@ const SnakeGame: React.FC = () => {
       )}
 
       {/* Button that triggers the Play Again modal if deposit >= 10 and game is not started or over */}
-      {deposit >= 10 && !gameStarted && !gameOver && (
+      {/* {deposit >= 10 && !gameStarted && !gameOver && (
         <button onClick={() => setPlayAgainModalOpen(true)} className="btn btn-success px-4 py-2 rounded-lg w-1/2 mt-7">
           Play Again
         </button>
-      )}
+      )} */}
 
       {/* On-Screen Directional Buttons */}
       {gameStarted && !gameOver && (

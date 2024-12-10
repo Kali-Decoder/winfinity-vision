@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useUserBalance } from "@/context/UserBalanceContext";
 import {toast} from "react-hot-toast";
 /* eslint-disable react/no-unescaped-entities */
 
@@ -29,8 +28,8 @@ type Pipe = {
 };
 
 const FlappyBird: React.FC = () => {
-  const { deposit, stake, setDeposit,stakeAmount } = useUserBalance();
-  const total = deposit + stake;
+  // const { deposit, stake, setDeposit,stakeAmount } = useUserBalance();
+
 
   const [birdY, setBirdY] = useState(GAME_HEIGHT / 2);
   const [birdVel, setBirdVel] = useState(0);
@@ -58,8 +57,8 @@ const FlappyBird: React.FC = () => {
 
   const startGame = () => {
     try {
-      if (deposit >= COST_TO_PLAY) {
-        setDeposit(deposit - COST_TO_PLAY);
+      if (COST_TO_PLAY>0) {
+        // setDeposit(deposit - COST_TO_PLAY);
         setGameOver(false);
         setScore(0);
         setBirdY(GAME_HEIGHT / 2);
@@ -83,7 +82,7 @@ const FlappyBird: React.FC = () => {
       if (score > TARGET_SCORE) {
         const difference = score - TARGET_SCORE;
         const reward = difference * 0.5;
-        setDeposit(deposit + reward);
+        // setDeposit(deposit + reward);
       }
       setGameOver(true);
       setGamePaid(false);
@@ -160,13 +159,13 @@ const FlappyBird: React.FC = () => {
     return () => document.removeEventListener("keyup", handleKeyUp);
   }, [gameOver, gameActive, gamePaid]);
 
-  useEffect(() => {
-    if (deposit === 0 && stake === 0) {
-      setInitialModalOpen(true);
-    } else {
-      setInitialModalOpen(false);
-    }
-  }, [deposit, stake]);
+  // useEffect(() => {
+  //   if (deposit === 0 && stake === 0) {
+  //     setInitialModalOpen(true);
+  //   } else {
+  //     setInitialModalOpen(false);
+  //   }
+  // }, [deposit, stake]);
 
   const handleResize = () => {
     const w = window.innerWidth;
@@ -185,8 +184,8 @@ const FlappyBird: React.FC = () => {
 
   const handleSelectAmount = async (amount: number) => {
     try {
-      await stakeAmount(amount);
-      setDeposit(deposit + amount);
+      // await stakeAmount(amount);
+      // setDeposit(deposit + amount);
       setInitialModalOpen(false);
       setPlayModalOpen(true);
     } catch (error) {
@@ -206,16 +205,16 @@ const FlappyBird: React.FC = () => {
   };
 
   const handlePlayAgain = () => {
-    if (deposit >= COST_TO_PLAY) {
-      setPlayModalOpen(true);
-    } else {
-      if (deposit === 0 && stake === 0) {
-        setInitialModalOpen(true);
-      } else {
-        toast.error("Not enough deposit to play.");
-        // alert("Not enough deposit to play again.");
-      }
-    }
+    // if (deposit >= COST_TO_PLAY) {
+    //   setPlayModalOpen(true);
+    // } else {
+    //   if (deposit === 0 && stake === 0) {
+    //     setInitialModalOpen(true);
+    //   } else {
+    //     toast.error("Not enough deposit to play.");
+    //     // alert("Not enough deposit to play again.");
+    //   }
+    // }
     setPlayAgainModalOpen(false);
   };
 
@@ -229,11 +228,11 @@ const FlappyBird: React.FC = () => {
       <div className="mb-4 flex gap-4 text-center text-base-content">
         <div className="flex flex-col items-center">
           <span className="text-sm text-base-content/80">Deposit</span>
-          <span className="text-lg font-semibold text-success">{deposit.toFixed(2)} USD</span>
+          <span className="text-lg font-semibold text-success">234 USD</span>
         </div>
         <div className="flex flex-col items-center">
           <span className="text-sm text-base-content/80">Stake</span>
-          <span className="text-lg font-semibold text-accent">{stake.toFixed(2)} USD</span>
+          <span className="text-lg font-semibold text-accent">234 USD</span>
         </div>
         <div className="flex flex-col items-center">
           <span className="text-sm text-base-content/80">Score</span>
@@ -373,15 +372,15 @@ const FlappyBird: React.FC = () => {
               <button
                 onClick={() => {
                   setGameOver(false);
-                  if (deposit >= COST_TO_PLAY) {
-                    setPlayModalOpen(true);
-                  } else if (deposit === 0 && stake === 0) {
-                    setInitialModalOpen(true);
-                  } else {
-                    toast.error("Not enough deposit to play again.");
+                  // if (deposit >= COST_TO_PLAY) {
+                  //   setPlayModalOpen(true);
+                  // } else if (deposit === 0 && stake === 0) {
+                  //   setInitialModalOpen(true);
+                  // } else {
+                  //   toast.error("Not enough deposit to play again.");
                     
-                    // alert("Not enough deposit to play again.");
-                  }
+                  //   // alert("Not enough deposit to play again.");
+                  // }
                 }}
                 className="btn btn-primary px-4 py-2 rounded-lg w-full"
               >
@@ -393,7 +392,7 @@ const FlappyBird: React.FC = () => {
       )}
 
       {/* Play Again Modal */}
-      {playAgainModalOpen && !gameOver && !gameActive && !gamePaid && deposit >= COST_TO_PLAY && (
+      {playAgainModalOpen && !gameOver && !gameActive && !gamePaid && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-4">
           <div className="bg-neutral p-6 rounded-lg shadow-lg max-w-sm w-full text-neutral-content">
             <h2 className="text-2xl font-semibold text-primary mb-4 text-center">Play Again?</h2>
@@ -412,14 +411,14 @@ const FlappyBird: React.FC = () => {
         </div>
       )}
 
-      {deposit >= COST_TO_PLAY && !gamePaid && !gameOver && !gameActive && (
+      {/* {deposit >= COST_TO_PLAY && !gamePaid && !gameOver && !gameActive && (
         <button
           onClick={() => setPlayAgainModalOpen(true)}
           className="btn btn-accent px-4 py-2 rounded-lg w-1/2 mt-7 shadow-md"
         >
           Play Again
         </button>
-      )}
+      )} */}
     </div>
   );
 };

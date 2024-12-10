@@ -150,11 +150,11 @@ const LeaderBoard = () => {
             </Tabs>
           )}
           <TabPanels>
-            <TabPanel>
-              <NFTS
+           
+              {/* <NFTS
                 setShowNFTPreview={setShowNFTPreview}
                 setNFTFlowId={setNFTFlowId}
-              />
+              /> */}
 
               {/* Display Uploaded Videos */}
               {/* {uploadedVideos.length > 0 && (
@@ -184,7 +184,7 @@ const LeaderBoard = () => {
                   </div>
                 </div>
               )} */}
-            </TabPanel>
+          
             <TabPanel>
               <Account />
               <LeaderBoardTable

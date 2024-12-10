@@ -19,22 +19,7 @@ import { addressFormatter } from '@/features/Game/lib/addressFormatter';
 
 const PaymentTypes = () => {
   const [copiedNotification, setCopiedNotification] = useState(false);
-  const [tokenBalance, setTokenBalance] = useState<string>('0');
-  const [totalInvested, setTotalInvested] = useState<string>('0');
-
-  const FTO_CONTRACT_ADDRESS = '0xYourTokenContractAddress';
-  const FTO_ABI = [
-    'function balanceOf(address owner) view returns (uint256)',
-    'function decimals() view returns (uint8)',
-  ];
-
  
-  const fetchTotalInvested = async () => {
-
-    setTotalInvested('500'); // Example hardcoded value
-  };
-
-
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedNotification(true);

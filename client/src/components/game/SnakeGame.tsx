@@ -411,7 +411,7 @@ const SnakeGame: React.FC = () => {
       {playAgainModalOpen && !gameOver && !gameStarted && deposit >= 10 && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
-            <h2 className="text-2xl font-semibold text-blue-500 mb-4 text-center">Play Again?</h2>
+            <h2 className="text-2xl font-semibold text-blue-500 mb-4 text-center ">Play Again?</h2>
             <p className="text-center mb-4">You have enough funds to start a new game. Would you like to continue?</p>
             <div className="flex justify-center gap-4">
               <button onClick={handlePlayAgain} className="btn btn-primary px-4 py-2 rounded-lg">

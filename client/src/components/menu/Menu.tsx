@@ -16,7 +16,7 @@ const Menu = () => {
           <span
             onClick={() => setSelectedTab(item.name)}
             className={clsxm([
-              'aspect-square text-2xl text-black',
+              'aspect-square text-2xl text-black cursor-pointer',
               selectedTab === item.name && 'text-primary-500',
             ])}
             key={item.name}

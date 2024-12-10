@@ -14,7 +14,6 @@ import {
   walletConnectWallet,
   okxWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-// import { uxuyWallet } from '@/wallets/uxuyWallet';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { Chain } from '@rainbow-me/rainbowkit';
 

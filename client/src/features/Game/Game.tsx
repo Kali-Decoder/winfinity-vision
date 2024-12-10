@@ -24,6 +24,7 @@ import {
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import { useTabsContext } from '@/features/Game/contexts/TabsContext';
 
+
 const Game = () => {
 
   const {
@@ -81,7 +82,7 @@ const Game = () => {
       <>
         <section className='mb-3 max-w-[95vw] space-y-9 mobile-demo:w-[450px]'>
  
-
+    
           {/* Trending and Tier Quizzes */}
           <TabPanel className='space-y-9'>
             <div>

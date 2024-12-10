@@ -84,38 +84,6 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!signer) return;
-    if (address) {
-      const fetchBalance = async () => {
-        const degoTokenContract = await getContractInstance(
-          tokenAddress,
-          tokenAbi
-        );
-        if (degoTokenContract) {
-          const balance = await degoTokenContract.balanceOf(address);
-          console.log('balance', ethers.utils.formatEther(balance));
-          setUserTokenBalance(ethers.utils.formatEther(balance));
-        }
-
-        const contractInstance = await getContractInstance(
-          mainContractAddress,
-          mainContractABI
-        );
-
-        if (contractInstance) {
-          const depositedBalance = await contractInstance.userBalance(address);
-          console.log(
-            'depositedBalance',
-            ethers.utils.formatEther(depositedBalance)
-          );
-
-          const poolBalance = await contractInstance.poolAmount(1);
-          console.log('poolBalance', ethers.utils.formatEther(poolBalance));
-          setPoolBalance(ethers.utils.formatEther(poolBalance));
-          setUserDepositedBalance(ethers.utils.formatEther(depositedBalance));
-        }
-      };
-      fetchBalance();
-    }
   }, [address, signer]);
 
   const makeRefferal = async () => {

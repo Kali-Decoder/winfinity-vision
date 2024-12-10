@@ -6,7 +6,6 @@ import OnDarkLogo from '@/components/logos/OnDarkLogo';
 import NextImage from '@/components/NextImage';
 import Loading from '@/components/SVGs/Loading';
 
-// import { useWeb3Context } from '@/contexts/Web3';
 import Dialog from '@/dialog/Dialog';
 import DialogTitle from '@/dialog/DialogTitle';
 
@@ -18,9 +17,6 @@ type Props = {
 
 export default function Login({ setSelectedAuth }: Props) {
   const [email, setEmail] = useState('');
-
-  // const { magicConnect, fclConnect } = useWeb3Context();
-
   const [showDialog, setShowDialog] = useState(false);
 
   const handleSignIn = (

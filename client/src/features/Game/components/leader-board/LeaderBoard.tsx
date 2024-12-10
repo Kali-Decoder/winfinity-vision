@@ -64,12 +64,7 @@ const LeaderBoard = () => {
             <ConnectButton showBalance={false} />
           </div>
 
-          {/* <div className='mx-auto w-[85vw] mobile-demo:w-[450px]'>
-            <TextField
-              startAdornment='search'
-              placeHolder='Search by player or team'
-            />
-          </div> */}
+          
         </div>
 
         {/* StoryBar below the search bar */}

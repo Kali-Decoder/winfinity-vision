@@ -31,28 +31,7 @@ const PaymentTypes = () => {
     'function decimals() view returns (uint8)',
   ];
 
-  // Fetch the token balance
-  const fetchTokenBalance = async () => {
-    if (!address) return;
-    try {
-      const provider = new ethers.providers.Web3Provider(
-        (window as any).ethereum
-      );
-      const contract = new ethers.Contract(
-        FTO_CONTRACT_ADDRESS,
-        FTO_ABI,
-        provider
-      );
-      const rawBalance = await contract.balanceOf(address);
-      const decimals = await contract.decimals();
-      const balance = ethers.utils.formatUnits(rawBalance, decimals);
-      setTokenBalance(balance);
-    } catch (error) {
-      console.error('Error fetching token balance:', error);
-    }
-  };
-
-
+ 
   const fetchTotalInvested = async () => {
 
     setTotalInvested('500'); // Example hardcoded value
@@ -60,7 +39,7 @@ const PaymentTypes = () => {
 
   useEffect(() => {
     if (address) {
-      fetchTokenBalance();
+     
       fetchTotalInvested();
     }
   }, [address]);

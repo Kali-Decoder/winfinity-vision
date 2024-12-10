@@ -38,7 +38,6 @@ export default function HomePage() {
         return (
           <QuizContextProvider>
             <TabsContextProvider>
-         
               <Game />
             </TabsContextProvider>
           </QuizContextProvider>

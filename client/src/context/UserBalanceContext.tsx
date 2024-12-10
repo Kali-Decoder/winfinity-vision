@@ -3,7 +3,7 @@ import React, { ReactNode, createContext, useContext, useEffect, useState } from
 import { BigNumber, Contract, ethers } from "ethers";
 import { useAccount } from "wagmi";
 import { Addresses, mainContractABI, tokenAbi } from "@/contract-constant/index";
-import { useEthersSigner } from "@/helper/signer";
+import { useEthersSigner } from "@/utils/signer";
 import {toast} from "react-hot-toast";
 interface UserBalanceContextType {
   deposit: number;
@@ -104,21 +104,6 @@ export const UserBalanceProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-
-  const withdrawAmount = async () => {
-    let id = toast.loading("Withdrawing...");
-    try {
-      const mainContract = await getContractInstance(Addresses[activeChain]?.mainContractAddress, mainContractABI);
-      if (mainContract) {
-        const tx = await mainContract?.withdraw();
-        await tx.wait();
-        toast.success("Withdrawn successfully", { id });
-      }
-    } catch (error) {
-      console.log(error, "Error");
-      toast.error("Error in withdrawing", { id });
-    }
-  };
 
   // Whenever stake changes, write it to localStorage
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 import React, { useState } from 'react';
 
 import Button from '@/components/buttons/Button';
@@ -37,7 +37,7 @@ export default function Login({ setSelectedAuth }: Props) {
                 <span className='h2 text-center text-xl font-normal text-primary-500'>
                   👋 Register Now
                 </span>
-                <ConnectButton />
+              
                 <span className='mt-6'>Or use email </span>
                 <input
                   className='mt-6 w-full rounded-full px-4 py-3.5 text-black hover:border-primary-500'

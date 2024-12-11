@@ -16,7 +16,7 @@ import {
 } from '@rainbow-me/rainbowkit/wallets';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { Chain } from '@rainbow-me/rainbowkit';
-
+import { uxuyWallet } from '@/wallets/uxuyWallet';
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
 
@@ -31,8 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     [
       {
         groupName: 'Recommended',
-        // @ts-ignore
-        wallets: [okxWallet, rainbowWallet, walletConnectWallet],
+        wallets: [uxuyWallet,okxWallet, rainbowWallet, walletConnectWallet],
       },
     ],
     {

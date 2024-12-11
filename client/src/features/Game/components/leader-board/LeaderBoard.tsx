@@ -17,12 +17,11 @@ import TabPanel from '@/components/tabs/TabPanel';
 import TabPanels from '@/components/tabs/TabPanels';
 import Tabs from '@/components/tabs/Tabs';
 
-
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import NFTS from '@/features/Game/components/leader-board/NFTS';
 import NFTPreview from '@/features/Game/components/NFTpreview/NFTPreview';
 
 import LeaderBoardTable from '@/features/Game/components/Quiz/leader-board-table/LeaderBoardTable';
-
 
 const LeaderBoard = () => {
   const [showNFTPreview, setShowNFTPreview] = useState(false);
@@ -50,7 +49,7 @@ const LeaderBoard = () => {
                 fill
               />
             )}
-     
+            <ConnectButton />
           </div>
         </div>
 

@@ -1,6 +1,10 @@
 "use client";
+import type { initOptions } from "@uxuycom/web3-tg-sdk";
 import  type { WalletTgSdk} from "@uxuycom/web3-tg-sdk";
-let sdkModule: { WalletTgSdk } | null = null;
+
+
+let sdkModule: { WalletTgSdk: typeof WalletTgSdk } ;
+
 if(typeof window!== "undefined"){
     sdkModule = require("@uxuycom/web3-tg-sdk")
 }

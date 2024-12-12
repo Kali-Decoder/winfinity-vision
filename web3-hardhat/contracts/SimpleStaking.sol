@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.0;
+
 import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
+
+
 contract WinfinityStaking {
     
     using Cast for uint256;

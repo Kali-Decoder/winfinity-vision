@@ -52,11 +52,8 @@ const LeaderBoard = () => {
                   imgClassName='object-cover rounded-full'
                   fill
                 />
-                <p className='text-2xl'>
-                  {account?.address?.slice(0, 8) +
-                    '...' +
-                    account?.address?.slice(-8)}
-                </p>
+                 <ConnectButton />
+                
               </div>
             </div>
           </>
@@ -71,8 +68,8 @@ const LeaderBoard = () => {
                 imgClassName=' rounded-full'
                 fill
               />
-              <p className='leading-32 px-4 text-center text-3xl'>
-                Endless Games, Infinite Rewards <br /> Play, Earn, and Earn! 💰
+              <p className='leading-10 px-4 text-center text-3xl'>
+                Endless Games, Infinite Rewards <br /> Play, <br/> Earn, and Earn! 💰
               </p>
               <ConnectButton />
             </div>

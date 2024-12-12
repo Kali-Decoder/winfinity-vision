@@ -22,6 +22,7 @@ import NFTS from '@/features/Game/components/leader-board/NFTS';
 import NFTPreview from '@/features/Game/components/NFTpreview/NFTPreview';
 
 import LeaderBoardTable from '@/features/Game/components/Quiz/leader-board-table/LeaderBoardTable';
+import { useAccount } from 'wagmi';
 
 const LeaderBoard = () => {
   const [showNFTPreview, setShowNFTPreview] = useState(false);
@@ -29,131 +30,107 @@ const LeaderBoard = () => {
   const [uploadedVideos, setUploadedVideos] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
 
+  const account = useAccount();
+
   const main = () => {
     return (
       <div>
-        <div
-          className={
-            Capacitor.isNativePlatform()
-              ? 'sticky top-0 z-[999] flex flex-col bg-dark pb-4'
-              : 'flex flex-col gap-4 '
-          }
-        >
-          <div className='flex items-center justify-between p-2'>
-            {isConnected && (
+        {account?.address && (
+          <>
+            <div
+              className={
+                Capacitor.isNativePlatform()
+                  ? 'sticky top-0 z-[999] flex flex-col bg-dark pb-4'
+                  : 'flex flex-col gap-4 '
+              }
+            >
+              <div className='flex items-center justify-between p-2'>
+                <NextImage
+                  src='/images/demo-profile.png'
+                  alt='Image placeholder'
+                  className='relative h-16 w-16 rounded-full border-2 border-primary-500'
+                  imgClassName='object-cover rounded-full'
+                  fill
+                />
+                <p className='text-2xl'>
+                  {account?.address?.slice(0, 8) +
+                    '...' +
+                    account?.address?.slice(-8)}
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+        {!account?.address && (
+          <>
+            <div className='!mt-2 flex h-[70vh] flex-col items-center justify-center gap-16'>
               <NextImage
-                src='/images/demo-profile.png'
-                alt='Image placeholder'
-                className='relative h-14 w-14 rounded-full border-2 border-primary-500'
-                imgClassName='object-cover rounded-full'
+                src='/images/logo2-removebg.png'
+                alt='logo'
+                className='relative h-20 w-full'
+                imgClassName=' rounded-full'
                 fill
               />
-            )}
-            <ConnectButton />
-          </div>
-        </div>
-
-        {/* StoryBar below the search bar */}
-        {/* <StoryBar stories={storyData} /> */}
-
-        {/* Tab List */}
-        {/* <div className='!mt-5 flex flex-col items-center gap-4 overflow-hidden mobile-m:flex-row'>
-          {categories.map((category, index) => (
-            <Tab
-              key={index}
-              className='flex w-48 rounded-full border-2 border-primary-500 p-2 hover:bg-primary-500'
-            >
-              <div className='flex h-full w-full items-center justify-center'>
-                {category.image}
-              </div>
-            </Tab>
-          ))}
-        </div> */}
-        {/* {Capacitor.getPlatform() === 'ios' ? (
-          <div
-            className='sticky top-0 z-[999] flex w-full bg-dark pb-4'
-            style={{
-              paddingTop: 'calc(2px + env(safe-area-inset-top))',
-            }}
-          >
-            <div className='w-[85vw] mobile-demo:w-[450px]'>
-              <div className='flex w-full items-center justify-center gap-1'>
-                <div className='flex w-full items-center justify-center gap-2'>
-                  <span className='text-2xl text-primary-500'>
-                    <CiMedal />
-                  </span>
-                  <span className='text-gradient-primary font-primary text-lg font-bold'>
-                    REWARDS
-                  </span>
-                </div>
-                <Currency />
-              </div>
+              <p className='leading-32 px-4 text-center text-3xl'>
+                Endless Games, Infinite Rewards <br /> Play, Earn, and Earn! 💰
+              </p>
+              <ConnectButton />
             </div>
-          </div>
-        ) : (
-          <div className='flex items-center justify-center gap-1 py-4'>
-            <div className='flex w-full items-center justify-center gap-2'>
-              <span className='text-2xl text-primary-500'>
-                <CiMedal />
-              </span>
-              <span className='text-gradient-primary font-primary text-lg font-bold'>
-                REWARDS
-              </span>
-            </div>
-            <Currency />
-          </div>
-        )} */}
+          </>
+        )}
 
-        <TabGroup>
-          {Capacitor.getPlatform() === 'ios' ? (
-            <Tabs className='m-6 mx-auto w-full'>
-              <Tab>
-                <div className='flex justify-center gap-2'>
-                  <span className='text-xl'>
-                    <IoDiamondOutline />
-                  </span>
-                  <span className='font-bold'>Games</span>
-                </div>
-              </Tab>
-              <Tab>
-                <div className='flex justify-center gap-2'>
-                  <span className='text-xl'>
-                    <RiVipCrownLine />
-                  </span>
-                  <span className='font-bold'>Leaderboard</span>
-                </div>
-              </Tab>
-            </Tabs>
-          ) : (
-            <Tabs className='m-10 mx-auto w-full'>
-              <Tab>
-                <div className='flex justify-center gap-2'>
-                  <span className='text-xl'>
-                    <IoDiamondOutline />
-                  </span>
-                  <span className='font-bold'>Games</span>
-                </div>
-              </Tab>
-              <Tab>
-                <div className='flex justify-center gap-2'>
-                  <span className='text-xl'>
-                    <RiVipCrownLine />
-                  </span>
-                  <span className='font-bold'>Leaderboard</span>
-                </div>
-              </Tab>
-            </Tabs>
-          )}
-          <TabPanels>
-            <TabPanel>
-              <NFTS
-                setShowNFTPreview={setShowNFTPreview}
-                setNFTFlowId={setNFTFlowId}
-              />
-            </TabPanel>
+        {account?.address && (
+          <>
+            <TabGroup>
+              {Capacitor.getPlatform() === 'ios' ? (
+                <Tabs className='m-6 mx-auto w-full'>
+                  <Tab>
+                    <div className='flex justify-center gap-2'>
+                      <span className='text-xl'>
+                        <IoDiamondOutline />
+                      </span>
+                      <span className='font-bold'>Games</span>
+                    </div>
+                  </Tab>
+                  <Tab>
+                    <div className='flex justify-center gap-2'>
+                      <span className='text-xl'>
+                        <RiVipCrownLine />
+                      </span>
+                      <span className='font-bold'>Leaderboard</span>
+                    </div>
+                  </Tab>
+                </Tabs>
+              ) : (
+                <Tabs className='m-10 mx-auto w-full'>
+                  <Tab>
+                    <div className='flex justify-center gap-2'>
+                      <span className='text-xl'>
+                        <IoDiamondOutline />
+                      </span>
+                      <span className='font-bold'>Games</span>
+                    </div>
+                  </Tab>
+                  <Tab>
+                    <div className='flex justify-center gap-2'>
+                      <span className='text-xl'>
+                        <RiVipCrownLine />
+                      </span>
+                      <span className='font-bold'>Leaderboard</span>
+                    </div>
+                  </Tab>
+                </Tabs>
+              )}
+              <TabPanels>
+                <TabPanel>
+                  <NFTS
+                    setShowNFTPreview={setShowNFTPreview}
+                    setNFTFlowId={setNFTFlowId}
+                  />
+                </TabPanel>
 
-            {/* Display Uploaded Videos */}
-            {/* {uploadedVideos.length > 0 && (
+                {/* Display Uploaded Videos */}
+                {/* {uploadedVideos.length > 0 && (
                 <div className='mx-auto my-10 overflow-hidden rounded-2xl sm:w-[26rem] sm:max-w-lg'>
                   <div className='mt-4 flex flex-col items-center gap-6'>
                     {uploadedVideos.map((video, index) => (
@@ -181,16 +158,18 @@ const LeaderBoard = () => {
                 </div>
               )} */}
 
-            <TabPanel>
-              <Account />
-              <LeaderBoardTable
-                className='mt-8'
-                figureClassName='border-transparent'
-              />
-            </TabPanel>
-          </TabPanels>
-        </TabGroup>
-        {createPortal(<Menu />, document.body)}
+                <TabPanel>
+                  <Account />
+                  <LeaderBoardTable
+                    className='mt-8'
+                    figureClassName='border-transparent'
+                  />
+                </TabPanel>
+              </TabPanels>
+            </TabGroup>
+            {createPortal(<Menu />, document.body)}
+          </>
+        )}
       </div>
     );
   };

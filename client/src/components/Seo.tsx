@@ -2,10 +2,10 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 const defaultMeta = {
-  title: 'DunkVerse',
-  siteName: 'DunkVerse',
+  title: 'Winfinity',
+  siteName: 'Winfinity',
   description:
-    'Compete against other players on a sports trivia to gain tokens and unique NFTs of your favorite players.',
+    'Play the Infinite Games , Earn Points and Yield Rewards on your Money 💰',
   url: 'https://open-graph-generator-jp.vercel.app',
   type: 'website',
   robots: 'follow, index',
@@ -54,8 +54,8 @@ export default function Seo(props: SeoProps) {
       <meta property='og:title' content={meta.title} />
       <meta name='image' property='og:image' content={meta.image} />
       {/* Twitter */}
-      <meta name='twitter:card' content='summary_large_image' />
-      <meta name='twitter:site' content='JeremyTheWizard' />
+      <meta name='twitter:card' content='itsNikku876' />
+      <meta name='twitter:site' content='itsNikku876' />
       <meta name='twitter:title' content={meta.title} />
       <meta name='twitter:description' content={meta.description} />
       <meta name='twitter:image' content={meta.image} />

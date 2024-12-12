@@ -16,7 +16,7 @@ type Props = {
 };
 
 const NFTPreview = ({ setShowNFTPreview }: Props) => {
-  const { preQuestions, NFTInfo, poolBalance } = useQuizContext();
+  const { preQuestions, NFTInfo } = useQuizContext();
   const [showInfo, setShowInfo] = useState(false);
   const [makeBet, setMakeBet] = useState(0);
   //#region  //*=========== video state ===========
@@ -88,7 +88,7 @@ const NFTPreview = ({ setShowNFTPreview }: Props) => {
             <div className='flex w-full items-center justify-between'>
               <div className='flex items-center gap-1'>
                 <span className='text-3xl font-bold'>
-                  {poolBalance ? Number(poolBalance).toFixed(2) : 'loading...'}
+                  234
                 </span>
                 <div className='text-[10px]'>
                   <span className='block'>FTO</span>

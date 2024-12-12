@@ -23,15 +23,13 @@ import NFTPreview from '@/features/Game/components/NFTpreview/NFTPreview';
 
 import LeaderBoardTable from '@/features/Game/components/Quiz/leader-board-table/LeaderBoardTable';
 import { useAccount } from 'wagmi';
+import Button from '@/components/buttons/Button';
+import { addressFormatter } from '../../lib/addressFormatter';
 
 const LeaderBoard = () => {
   const [showNFTPreview, setShowNFTPreview] = useState(false);
   const [NFTFlowId, setNFTFlowId] = useState<string | undefined>();
-  const [uploadedVideos, setUploadedVideos] = useState([]);
-  const [isConnected, setIsConnected] = useState(false);
-
   const account = useAccount();
-
   const main = () => {
     return (
       <div>
@@ -48,12 +46,33 @@ const LeaderBoard = () => {
                 <NextImage
                   src='/images/demo-profile.png'
                   alt='Image placeholder'
-                  className='relative h-16 w-16 rounded-full border-2 border-primary-500'
+                  className='relative h-12 w-12 rounded-full border-2 border-primary-500'
                   imgClassName='object-cover rounded-full'
                   fill
                 />
-                 <ConnectButton />
-                
+
+                <div className='flex w-[75%] space-x-2'>
+                <Button
+                  variant='outline'
+                  rightIconClassName='text-primary-500 text-xs'
+                  size='sm'
+                  className=' w-1/2 px-3 py-2 text-white'
+                >
+                  <span className='mx-auto w-full'>
+                    {addressFormatter(account?.address)}
+                  </span>
+                </Button>
+                <Button
+                  variant='outline'
+                  rightIconClassName='text-primary-500 text-xs'
+                  size='sm'
+                  className=' w-1/3 px-3 py-2 text-white'
+                >
+                  <span className='mx-auto w-full'>
+                    $ 234 USDC
+                  </span>
+                </Button>
+                </div>
               </div>
             </div>
           </>
@@ -68,8 +87,9 @@ const LeaderBoard = () => {
                 imgClassName=' rounded-full'
                 fill
               />
-              <p className='leading-10 px-4 text-center text-3xl'>
-                Endless Games, Infinite Rewards <br /> Play, <br/> Earn, and Earn! 💰
+              <p className='mb-8 px-4 text-center text-3xl leading-10'>
+                Endless Games, Infinite Rewards <br /> Play, <br /> Earn, and
+                Earn! 💰
               </p>
               <ConnectButton />
             </div>
@@ -125,35 +145,6 @@ const LeaderBoard = () => {
                     setNFTFlowId={setNFTFlowId}
                   />
                 </TabPanel>
-
-                {/* Display Uploaded Videos */}
-                {/* {uploadedVideos.length > 0 && (
-                <div className='mx-auto my-10 overflow-hidden rounded-2xl sm:w-[26rem] sm:max-w-lg'>
-                  <div className='mt-4 flex flex-col items-center gap-6'>
-                    {uploadedVideos.map((video, index) => (
-                      // <video
-                      //   key={index}
-                      //   controls
-                      //   autoPlay
-                      //   src={video}
-                      //   className='rounded-lg shadow-lg'
-                      //   style={{
-                      //     width: '80%',
-                      //     maxWidth: '600px',
-                      //     height: 'auto',
-                      //   }}
-                      // />
-
-                      <NFTThumbnail
-                        key={index}
-                        NFTFlowId='3208'
-                        showPrice={true}
-                        // onClick={() => handleNFTThumbnailClick(NFTId)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )} */}
 
                 <TabPanel>
                   <Account />

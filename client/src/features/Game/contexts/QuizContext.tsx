@@ -6,6 +6,7 @@ import {
   Quiz,
 } from '@/features/Game/types/Types';
 
+import { useAccount } from "wagmi";
 import { PostQuestions } from '../types/Types';
 
 type QuizContext = {
@@ -43,12 +44,13 @@ export const useQuizContext = () => {
 };
 
 const QuizContextProvider = ({ children }: { children: ReactNode }) => {
-  const [userTokenBalance, setUserTokenBalance] = useState<string>('0');
-  const [userDepositedBalance, setUserDepositedBalance] = useState<string>('0');
-  const [poolBalance, setPoolBalance] = useState<string>('0');
 
 
-
+  const { address, chain } = useAccount();
+  const [activeChain, setActiveChainId] = useState<number | undefined>(chain?.id);
+  useEffect(() => {
+    setActiveChainId(chain?.id);
+  }, [chain?.id]);
   const [activeQuiz, setActiveQuiz] = useState(false);
   const [activeStep, setActiveStep] =
     useState<Quiz['activeStep']>('pre-questions');
@@ -111,9 +113,9 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         NFTInfo,
         setNFTInfo,
         reset,
-        userTokenBalance,
-        userDepositedBalance,
-        poolBalance,
+       
+
+      
       }}
     >
       {children}

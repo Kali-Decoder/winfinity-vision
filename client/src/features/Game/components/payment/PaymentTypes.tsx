@@ -16,10 +16,11 @@ import TabPanels from '@/components/tabs/TabPanels';
 import Dialog from '@/dialog/Dialog';
 
 import { addressFormatter } from '@/features/Game/lib/addressFormatter';
+import { useAccount } from 'wagmi';
 
 const PaymentTypes = () => {
   const [copiedNotification, setCopiedNotification] = useState(false);
- 
+  const account = useAccount();
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedNotification(true);
@@ -91,7 +92,7 @@ const PaymentTypes = () => {
                 
                 >
                   <span className='mx-auto w-full'>
-                    {addressFormatter('oxabcdeferreeeedd')}
+                    {addressFormatter(account?.address)}
                   </span>
                 </Button>
               </div>

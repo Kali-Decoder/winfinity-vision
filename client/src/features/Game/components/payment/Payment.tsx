@@ -16,10 +16,10 @@ import OutputSVG from '@/features/Game/components/payment/OutputSVG';
 import PaymentTypes from '@/features/Game/components/payment/PaymentTypes';
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import NextImage from '@/components/NextImage';
+import { useAccount } from 'wagmi';
 
 const Payment = () => {
-  const { userTokenBalance, userDepositedBalance, poolBalance } =
-    useQuizContext();
+  const account = useAccount();
   return (
     <div>
       {/* {Capacitor.getPlatform() == 'ios' ? (

@@ -22,15 +22,9 @@ type QuizContext = {
   setQuestions: React.Dispatch<React.SetStateAction<Question[]>>;
   postQuestions: PostQuestions;
   setPostQuestions: React.Dispatch<React.SetStateAction<PostQuestions>>;
-
   NFTInfo: NFTInfo;
   setNFTInfo: React.Dispatch<React.SetStateAction<NFTInfo>>;
-
   reset: () => void;
-
-  userTokenBalance: string;
-  userDepositedBalance: string;
-  poolBalance: string;
 };
 
 export const QuizContext = React.createContext<QuizContext>({} as QuizContext);
@@ -113,9 +107,6 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         NFTInfo,
         setNFTInfo,
         reset,
-       
-
-      
       }}
     >
       {children}

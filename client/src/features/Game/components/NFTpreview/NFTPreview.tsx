@@ -8,7 +8,6 @@ import NextImage from '@/components/NextImage';
 import PercentageBar from '@/components/percentages/PercentageBar';
 
 import { NFTMedia } from '@/features/Game/constants/NFTs';
-import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import { NFTInfo } from '@/features/Game/types/Types';
 
 type Props = {
@@ -20,7 +19,6 @@ const NFTPreview = ({ NFTFlowId, setShowNFTPreview }: Props) => {
   const [showInfo, setShowInfo] = useState(false);
 
   const [NFTInfo, setNFTInfo] = useState<NFTInfo | undefined>();
-  const { poolBalance } = useQuizContext();
   //#region  //*=========== video state ===========
   const videoRef: React.MutableRefObject<HTMLVideoElement | null> =
     useRef(null);
@@ -140,7 +138,7 @@ const NFTPreview = ({ NFTFlowId, setShowNFTPreview }: Props) => {
             </div>
             <div className='flex items-center gap-1'>
               <span className='text-3xl font-bold'>
-                {poolBalance ? Number(poolBalance).toFixed(2) : 'Loading...'}
+                234
               </span>
               <div className='text-[10px]'>
                 <span className='block'>FTO</span>

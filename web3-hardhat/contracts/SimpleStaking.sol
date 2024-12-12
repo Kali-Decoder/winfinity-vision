@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.0;
-
 import {IERC20} from "@openzeppelin/contracts/interfaces/IERC20.sol";
-
-
-contract SimpleRewards {
+contract WinfinityStaking {
     
     using Cast for uint256;
-
+    address public owner;
     event Staked(address user, uint256 amount);
     event Unstaked(address user, uint256 amount);
     event Claimed(address user, uint256 amount);
@@ -24,16 +21,18 @@ contract SimpleRewards {
         uint128 checkpoint;                                         // RewardsPerToken the last time the user rewards were updated
     }
 
-    IERC20 public immutable stakingToken;                            // Token to be staked
-    uint256 public totalStaked;                                     // Total amount staked
     mapping (address => uint256) public userStake;                  // Amount staked per user
+    mapping (address => UserRewards) public accumulatedRewards;     // Rewards accumulated per user
 
+    IERC20 public immutable stakingToken;                            // Token to be staked
     IERC20 public immutable rewardsToken;                            // Token used as rewards
+
+    uint256 public totalStaked;                                     // Total amount staked
     uint256 public immutable rewardsRate;                           // Wei rewarded per second among all token holders
     uint256 public immutable rewardsStart;                          // Start of the rewards program
     uint256 public immutable rewardsEnd;                            // End of the rewards program       
+
     RewardsPerToken public rewardsPerToken;                         // Accumulator to track rewards per token
-    mapping (address => UserRewards) public accumulatedRewards;     // Rewards accumulated per user
     
     constructor(address stakingToken_, address rewardsToken_, uint256 rewardsStart_, uint256 rewardsEnd_, uint256 totalRewards)
     {
@@ -41,8 +40,9 @@ contract SimpleRewards {
         rewardsToken = IERC20(rewardsToken_);
         rewardsStart = rewardsStart_;
         rewardsEnd = rewardsEnd_;
-        rewardsRate = totalRewards / (rewardsEnd_ - rewardsStart_); // The contract will fail to deploy if end <= start, as it should
+        rewardsRate = totalRewards / (rewardsEnd_ - rewardsStart_); 
         rewardsPerToken.lastUpdated = rewardsStart_.u128();
+        owner = msg.sender;
     }
 
     /// @notice Update the rewards per token accumulator according to the rate, the time elapsed since the last update, and the current total staked amount.
@@ -131,16 +131,11 @@ contract SimpleRewards {
     function _claim(address user, uint256 amount) internal
     {
         uint256 rewardsAvailable = _updateUserRewards(msg.sender).accumulated;
-        
-        // This line would panic if the user doesn't have enough rewards accumulated
         accumulatedRewards[user].accumulated = (rewardsAvailable - amount).u128();
-
-        // This line would panic if the contract doesn't have enough rewards tokens
         rewardsToken.transfer(user, amount);
         emit Claimed(user, amount);
     }
-
-
+    
     /// @notice Stake tokens.
     function stake(uint256 amount) public virtual
     {
@@ -174,6 +169,11 @@ contract SimpleRewards {
         RewardsPerToken memory rewardsPerToken_ = _calculateRewardsPerToken(rewardsPerToken);
         return accumulatedRewards_.accumulated + _calculateUserRewards(userStake[user], accumulatedRewards_.checkpoint, rewardsPerToken_.accumulated);
     }
+
+    // function changeStakingAddress(address _newStakingAddress) public {
+    //     require(owner==msg.sender,"YOU_ARE_NOT_OWNER");
+    //     stakingToken = IERC20(_newStakingAddress);
+    // }
 }
 
 library Cast {

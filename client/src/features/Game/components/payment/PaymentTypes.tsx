@@ -17,6 +17,11 @@ import Dialog from '@/dialog/Dialog';
 
 import { addressFormatter } from '@/features/Game/lib/addressFormatter';
 import { useAccount } from 'wagmi';
+import Carousel from '@/components/carousel/Carousel';
+import { Tab } from '@headlessui/react';
+import clsxm from '@/lib/clsxm';
+import NextImage from '@/components/NextImage';
+import { paymentTypes } from '../../constants/paymentTypes';
 
 const PaymentTypes = () => {
   const [copiedNotification, setCopiedNotification] = useState(false);
@@ -32,51 +37,7 @@ const PaymentTypes = () => {
   return (
     <>
       <TabGroup>
-        {/* Tab Headers */}
-        {/* <Tab.List>
-          <Carousel
-            className='left-[50%] w-screen -translate-x-2/4 mobile-demo:w-[500px]'
-            itemWrapperClassName='w-max'
-            scrollContainerClassName='snap-none pl-[25px]'
-            slide={false}
-            indicators={false}
-          >
-            {paymentTypes.map((paymentType, index) => (
-              <Tab
-                key={index}
-                className='pr-4'
-                onClick={() => setSelected(index)}
-              >
-                <div
-                  className={clsxm([
-                    'flex h-full min-h-[127px] w-full min-w-[135px] flex-col rounded-2xl p-4',
-                    selected === index ? 'bg-gradient-primary' : 'bg-white',
-                  ])}
-                >
-                  <div className='flex items-center justify-between gap-2'>
-                    <NextImage
-                      src={paymentType.imgSrc}
-                      alt='paymentType'
-                      fill
-                      className='relative h-6 w-6'
-                      imgClassName='object-contain'
-                    />
-                  </div>
-                  <div className='mt-auto h-full text-black'>
-                    <span className='block text-sm font-bold'>
-                      {paymentType.name}
-                    </span>
-                    <span className='text-2xs'>
-                      Commission {paymentType.commission}%
-                    </span>
-                  </div>
-                </div>
-              </Tab>
-            ))}
-          </Carousel>
-        </Tab.List> */}
-
-        {/* Tab Panels */}
+        
         <TabPanels className='mt-8'>
           {/* Panel 1: Wallet and Balance Info */}
           <TabPanel>
@@ -92,7 +53,7 @@ const PaymentTypes = () => {
                 
                 >
                   <span className='mx-auto w-full'>
-                    {addressFormatter(account?.address)}
+                    {addressFormatter(account?.address as string)}
                   </span>
                 </Button>
               </div>

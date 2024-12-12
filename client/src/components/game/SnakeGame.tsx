@@ -338,7 +338,7 @@ const SnakeGame: React.FC = () => {
       </div>
 
       {paused && gameStarted && !gameOver && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-start justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white dark:bg-neutral-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
             <h2 className="text-2xl font-semibold text-warning mb-4 text-center">Game Paused</h2>
             <p className="text-sm text-gray-500 text-center mb-4">Press "Escape" to resume</p>

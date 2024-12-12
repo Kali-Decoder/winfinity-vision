@@ -7,10 +7,10 @@ import { IoDiamondOutline } from 'react-icons/io5';
 import { RiVipCrownLine } from 'react-icons/ri';
 
 import Account from '@/components/account/Account';
-import TextField from '@/components/inputs/TextField';
+
 import Menu from '@/components/menu/Menu';
 import NextImage from '@/components/NextImage';
-import StoryBar from '@/components/story/StoryBar';
+
 import Tab from '@/components/tabs/Tab';
 import TabGroup from '@/components/tabs/TabGroup';
 import TabPanel from '@/components/tabs/TabPanel';
@@ -59,7 +59,7 @@ const LeaderBoard = () => {
                   className=' w-1/2 px-3 py-2 text-white'
                 >
                   <span className='mx-auto w-full'>
-                    {addressFormatter(account?.address)}
+                    {addressFormatter(account?.address as string)}
                   </span>
                 </Button>
                 <Button

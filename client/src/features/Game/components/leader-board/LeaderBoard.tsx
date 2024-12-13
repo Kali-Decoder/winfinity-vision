@@ -51,7 +51,7 @@ const LeaderBoard = () => {
                 />
 
                 <div className='w-[80%] text-sm'>
-                  <ConnectButton  accountStatus={false} />
+                  <ConnectButton showBalance />
                 </div>
               </div>
             </div>

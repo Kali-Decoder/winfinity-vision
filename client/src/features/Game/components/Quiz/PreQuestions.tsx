@@ -15,7 +15,7 @@ import PlayersInfiniteScroll from '@/features/Game/components/Quiz/PlayersInfini
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 
 const PreQuestions = () => {
-  const { reset, preQuestions, setActiveStep, NFTInfo, setNFTInfo } =
+  const {  preQuestions, setActiveStep, NFTInfo, setNFTInfo } =
     useQuizContext();
   const [showNFTPreview, setShowNFTPreview] = useState(false);
   const [showInviteFriends, setShowInviteFriends] = useState(false);
@@ -71,7 +71,7 @@ const PreQuestions = () => {
         >
           <div className={clsx('flex items-center gap-4')}>
             <span
-              onClick={() => reset()}
+           
               className='cursor-pointer text-2xl text-white'
             >
               <BsArrowLeft />

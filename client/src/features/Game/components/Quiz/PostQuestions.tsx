@@ -12,11 +12,9 @@ import NFTThumbnail from '@/features/Game/components/Quiz/NFTThumbnail';
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 
 const PostQuestions = () => {
-  const { preQuestions, reset } = useQuizContext();
+  const { preQuestions } = useQuizContext();
 
-  const handleQuizDone = async () => {
-    reset();
-  };
+
   return (
     <div
       className={clsx(
@@ -25,12 +23,7 @@ const PostQuestions = () => {
         'relative flex flex-col'
       )}
     >
-      <span
-        className='absolute right-0 top-0 text-3xl'
-        onClick={() => handleQuizDone()}
-      >
-        <AiOutlineClose />
-      </span>
+     
       <div className='text-gradient-primary flex w-full flex-col items-center gap-1'>
         <span className='h2 block font-secondary'>Good Job!</span>
         <span className='font-secondary'>You Get +2019 Quiz Points</span>
@@ -51,13 +44,7 @@ const PostQuestions = () => {
         <LeaderBoardTable className='mt-6' />
       </>
 
-      <Button
-        onClick={() => handleQuizDone()}
-        variant='outline'
-        className='mt-8 py-5'
-      >
-        Claim Reward
-      </Button>
+     
     </div>
   );
 };

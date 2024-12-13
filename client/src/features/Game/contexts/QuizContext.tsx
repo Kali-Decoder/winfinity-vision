@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import {
   NFTInfo,
   PreQuestions,
@@ -6,9 +6,10 @@ import {
   Quiz,
 } from '@/features/Game/types/Types';
 
-import { useAccount } from "wagmi";
 import { PostQuestions } from '../types/Types';
-
+import { ethers } from 'ethers';
+import { useAccount, useWriteContract } from 'wagmi';
+import { mainContractABI, mainContractAddress } from '@/contract-constant';
 type QuizContext = {
   activeQuiz: boolean;
   setActiveQuiz: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,7 +25,7 @@ type QuizContext = {
   setPostQuestions: React.Dispatch<React.SetStateAction<PostQuestions>>;
   NFTInfo: NFTInfo;
   setNFTInfo: React.Dispatch<React.SetStateAction<NFTInfo>>;
-  reset: () => void;
+  stakeAmount: (amount: string) => void;
 };
 
 export const QuizContext = React.createContext<QuizContext>({} as QuizContext);
@@ -38,13 +39,8 @@ export const useQuizContext = () => {
 };
 
 const QuizContextProvider = ({ children }: { children: ReactNode }) => {
-
-
   const { address, chain } = useAccount();
-  const [activeChain, setActiveChainId] = useState<number | undefined>(chain?.id);
-  useEffect(() => {
-    setActiveChainId(chain?.id);
-  }, [chain?.id]);
+  const { data: hash, writeContract } = useWriteContract();
   const [activeQuiz, setActiveQuiz] = useState(false);
   const [activeStep, setActiveStep] =
     useState<Quiz['activeStep']>('pre-questions');
@@ -68,28 +64,18 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
     version: '',
   });
 
-  const reset = () => {
-    setNFTInfo({
-      NFTId: '',
-      NFTName: '',
-      NFTDescription: '',
-      NFTTotalPrice: '',
-      NFTVideoSrc: '',
-      maxBet: '',
-      version: '',
+ 
+
+  async function stakeAmount(amount:string) {
+    console.log('stakeAmount', amount);
+    writeContract({
+      address: mainContractAddress,
+      abi: mainContractABI,
+      functionName: 'stake',
+      args: [ethers.utils.parseEther(amount)],
     });
 
-    setPreQuestions({
-      NFTFlowId: '',
-      players: [{ profileImage: '', handle: '', points: 0, countryImage: '' }],
-      categoryImage: <></>,
-      requiredBet: '',
-    });
-    setActiveQuiz(false);
-    setActiveStep('pre-questions');
-    setQuestions({} as Question[]);
-    setPostQuestions({} as PostQuestions);
-  };
+  }
 
   return (
     <QuizContext.Provider
@@ -106,7 +92,7 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         setPostQuestions,
         NFTInfo,
         setNFTInfo,
-        reset,
+        stakeAmount
       }}
     >
       {children}

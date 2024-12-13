@@ -1,325 +1,353 @@
 export const mainContractABI = [
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: 'address',
-        name: '_flowToken',
-        type: 'address',
+        "internalType": "address",
+        "name": "stakingToken_",
+        "type": "address"
       },
       {
-        internalType: 'address',
-        name: '_commissionsAddress',
-        type: 'address',
+        "internalType": "address",
+        "name": "rewardsToken_",
+        "type": "address"
       },
+      {
+        "internalType": "uint256",
+        "name": "rewardsStart_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rewardsEnd_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalRewards",
+        "type": "uint256"
+      }
     ],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
       },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
-    name: 'AccruedFeesWithdrawn',
-    type: 'event',
+    "name": "Claimed",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'userID',
-        type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "accumulated",
+        "type": "uint256"
+      }
     ],
-    name: 'Deposit',
-    type: 'event',
+    "name": "RewardsPerTokenUpdated",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: true,
-        internalType: 'address',
-        name: 'contractAddress',
-        type: 'address',
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
       },
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'momentID',
-        type: 'uint256',
-      },
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
-    name: 'MomentPurchased',
-    type: 'event',
+    "name": "Staked",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'userID',
-        type: 'uint256',
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
       },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
-    name: 'NewUser',
-    type: 'event',
+    "name": "Unstaked",
+    "type": "event"
   },
   {
-    anonymous: false,
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'userID',
-        type: 'uint256',
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
       },
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "rewards",
+        "type": "uint256"
       },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "checkpoint",
+        "type": "uint256"
+      }
     ],
-    name: 'Withdrawal',
-    type: 'event',
+    "name": "UserRewardsUpdated",
+    "type": "event"
   },
   {
-    inputs: [],
-    name: 'accruedFees',
-    outputs: [
+    "inputs": [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    stateMutability: 'view',
-    type: 'function',
+    "name": "accumulatedRewards",
+    "outputs": [
+      {
+        "internalType": "uint128",
+        "name": "accumulated",
+        "type": "uint128"
+      },
+      {
+        "internalType": "uint128",
+        "name": "checkpoint",
+        "type": "uint128"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: 'commission',
-    outputs: [
+    "inputs": [],
+    "name": "claim",
+    "outputs": [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: 'view',
-    type: 'function',
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: 'commissionsAddress',
-    outputs: [
+    "inputs": [],
+    "name": "currentRewardsPerToken",
+    "outputs": [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: 'view',
-    type: 'function',
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: 'createUser',
-    outputs: [
+    "inputs": [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
     ],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    "name": "currentUserRewards",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'poolId',
-        type: 'uint256',
-      },
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
     ],
-    name: 'deposit',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: 'flowToken',
-    outputs: [
+    "inputs": [],
+    "name": "rewardsEnd",
+    "outputs": [
       {
-        internalType: 'contract IERC20',
-        name: '',
-        type: 'address',
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: 'view',
-    type: 'function',
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "rewardsPerToken",
+    "outputs": [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
+        "internalType": "uint128",
+        "name": "accumulated",
+        "type": "uint128"
       },
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-      {
-        internalType: 'bytes',
-        name: '',
-        type: 'bytes',
-      },
+        "internalType": "uint128",
+        "name": "lastUpdated",
+        "type": "uint128"
+      }
     ],
-    name: 'onERC721Received',
-    outputs: [
-      {
-        internalType: 'bytes4',
-        name: '',
-        type: 'bytes4',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "rewardsRate",
+    "outputs": [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    name: 'poolAmount',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "rewardsStart",
+    "outputs": [
       {
-        internalType: 'uint256',
-        name: 'momentID',
-        type: 'uint256',
-      },
-      {
-        internalType: 'address[]',
-        name: 'affectedUsers',
-        type: 'address[]',
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    name: 'purchaseMoment',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "rewardsToken",
+    "outputs": [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
     ],
-    name: 'userBalance',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
     ],
-    name: 'users',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'owedValue',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'uuid',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
+    "name": "stake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    inputs: [
+    "inputs": [],
+    "name": "stakingToken",
+    "outputs": [
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'poolId',
-        type: 'uint256',
-      },
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
     ],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    inputs: [],
-    name: 'withdrawAccruedFees',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    "inputs": [],
+    "name": "totalStaked",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "unstake",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "userStake",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
 ];
 export const mainContractAddress = '0xce6c79EA7C4cE0DC5d6863ACb0cBEABc27C351b6';
 export const tokenAddress = '0x82CA1b39805C0050CbCdF3F9b73Fc35E60D01543';
@@ -894,8 +922,3 @@ export const tokenAbi = [
     type: 'function',
   },
 ];
-
-export const Addresses =[{
-    "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-    "name": "SimpleStorage",
-}]

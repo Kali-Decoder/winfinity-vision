@@ -1,13 +1,11 @@
-
 import React, { useEffect, useState } from 'react';
 
 import { BsCalendarCheck } from 'react-icons/bs';
 import { RxCopy } from 'react-icons/rx';
 
-
 import Button from '@/components/buttons/Button';
 import TextField from '@/components/inputs/TextField';
-
+import SlideUp from '@/components/modals/SlideUp';
 import RadioGroup from '@/components/radio/RadioGroup';
 import RadioOption from '@/components/radio/RadioOption';
 import TabGroup from '@/components/tabs/TabGroup';
@@ -17,14 +15,12 @@ import Dialog from '@/dialog/Dialog';
 
 import { addressFormatter } from '@/features/Game/lib/addressFormatter';
 import { useAccount } from 'wagmi';
-import Carousel from '@/components/carousel/Carousel';
-import { Tab } from '@headlessui/react';
-import clsxm from '@/lib/clsxm';
-import NextImage from '@/components/NextImage';
-import { paymentTypes } from '../../constants/paymentTypes';
 
 const PaymentTypes = () => {
   const [copiedNotification, setCopiedNotification] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
+  const [depositAmount, setDepositAmount] = useState(0);
+  const [userBalance, setUserBalance] = useState(234);
   const account = useAccount();
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -34,10 +30,14 @@ const PaymentTypes = () => {
     }, 900);
   };
 
+  const makeUserbalance = (percentage: any) => {
+    const percentageValue = (percentage / 100) * userBalance;
+    setDepositAmount(percentageValue);
+  };
+
   return (
     <>
       <TabGroup>
-        
         <TabPanels className='mt-8'>
           {/* Panel 1: Wallet and Balance Info */}
           <TabPanel>
@@ -50,7 +50,6 @@ const PaymentTypes = () => {
                   rightIconClassName='text-primary-500 text-xl'
                   size='base'
                   className='w-full px-5 py-3 text-white'
-                
                 >
                   <span className='mx-auto w-full'>
                     {addressFormatter(account?.address as string)}
@@ -67,71 +66,82 @@ const PaymentTypes = () => {
                   className='w-full px-5 py-3 text-white'
                   onClick={() => handleCopy(`354`)}
                 >
-                  <span className='mx-auto w-full'>345</span>
+                  <span className='mx-auto w-full'>{userBalance}</span>
                 </Button>
               </div>
 
-              <Button variant='outline' size='lg' className='mt-20'>
+              <Button
+                onClick={() => setShowInfo(!showInfo)}
+                variant='outline'
+                size='lg'
+                className='mt-20'
+              >
                 Deposit
               </Button>
             </div>
-          </TabPanel>
-
-          {/* Panel 2: Deposit Form */}
-          <TabPanel>
-            <form className='space-y-6'>
-              <TextField
-                required={true}
-                inputClassName='bg-transparent border-primary-500 rounded-full text-white placeholder:text-gray-300'
-                placeHolder='Card Number'
-                type='number'
-              />
-              <TextField
-                required={true}
-                inputClassName='bg-transparent border-primary-500 rounded-full text-white placeholder:text-gray-300'
-                placeHolder='CVV'
-                type='number'
-              />
-              <TextField
-                required={true}
-                inputClassName='bg-transparent border-primary-500 rounded-full text-white invalid:text-gray-300'
-                placeHolder='Expiry Date'
-                type='month'
-                endAdornment={<BsCalendarCheck />}
-                endAdornmentClassName='cursor-pointer'
-              />
-              <TextField
-                required={true}
-                inputClassName='bg-transparent border-primary-500 rounded-full text-white placeholder:text-gray-300'
-                placeholder='Amount'
-              />
-              <div className='flex items-center gap-4'>
-                <RadioGroup>
-                  <div className='flex items-center gap-4'>
-                    <RadioOption
-                      className='inline-block'
-                      value="I agree to the terms of use of the 'One-click pay'"
-                    />
-                    <span className='text-2xs'>
-                      I agree to the terms of use of the "One-click pay"
-                    </span>
-                  </div>
-                </RadioGroup>
-              </div>
-              <Button variant='outline' size='lg' className='!mt-12'>
-                Deposit
-              </Button>
-            </form>
-          </TabPanel>
-
-          {/* Panel 3: Coming Soon */}
-          <TabPanel className='mt-20 flex w-full justify-center'>
-            <span className='h2'>COMING SOON</span>
           </TabPanel>
         </TabPanels>
       </TabGroup>
 
       {/* Copy Notification Dialog */}
+
+      {showInfo && (
+        <SlideUp open={showInfo} setOpen={setShowInfo}>
+          <div className='flex w-full flex-col items-center justify-between space-y-5 text-black'>
+            <div className='relative h-56 w-96 select-none p-6'>
+              <p className='text-sm uppercase'>
+                Deposit Amount (Max {userBalance} USDC)
+              </p>
+              <input
+                type='number'
+                name='depositAmount'
+                value={depositAmount}
+                onChange={(e: any) => setDepositAmount(e.target.value)}
+                className='mt-3 h-12 w-full rounded-xl border-2 border-gray-300 px-4 py-2'
+                placeholder='Enter Amount'
+              />
+              <div className='mt-3 flex space-x-2'>
+                <div
+                  onClick={() => {
+                    makeUserbalance(10);
+                  }}
+                  className='flex h-8 w-12  cursor-pointer items-center justify-center rounded-md bg-sky-200 text-xs font-bold text-blue-900 hover:bg-blue-300'
+                >
+                  10%
+                </div>
+
+                <div
+                  onClick={() => {
+                    makeUserbalance(50);
+                  }}
+                  className='flex h-8 w-12  cursor-pointer items-center justify-center rounded-md bg-sky-200 text-xs font-bold text-blue-900 hover:bg-blue-300'
+                >
+                  50%
+                </div>
+                <div
+                  onClick={() => {
+                    makeUserbalance(75);
+                  }}
+                  className='flex h-8 w-12  cursor-pointer items-center justify-center rounded-md bg-sky-200 text-xs font-bold text-blue-900 hover:bg-blue-300'
+                >
+                  75%
+                </div>
+                <div
+                  onClick={() => {
+                    makeUserbalance(100);
+                  }}
+                  className='flex h-8 w-12  cursor-pointer items-center justify-center rounded-md bg-sky-200 text-xs font-bold text-blue-900 hover:bg-blue-300'
+                >
+                  100%
+                </div>
+              </div>
+              <button className='mt-4 w-full rounded-full bg-blue-800 px-10 py-2 font-semibold text-white'>
+                Deposit
+              </button>
+            </div>
+          </div>
+        </SlideUp>
+      )}
       <Dialog
         isOpen={copiedNotification}
         onClose={() => setCopiedNotification(false)}

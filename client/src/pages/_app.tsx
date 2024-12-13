@@ -2,7 +2,7 @@ import { AppProps } from 'next/app';
 import '@/styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { arbitrum, base, mainnet, optimism, polygon } from 'wagmi/chains';
+import { opBNBTestnet,mainnet } from 'wagmi/chains';
 
 import {
   connectorsForWallets,
@@ -22,10 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const chains: readonly [Chain, ...Chain[]] = [
     mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
+    opBNBTestnet
   ];
   const connectors = connectorsForWallets(
     [
@@ -44,11 +41,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     connectors,
     chains: chains,
     transports: {
-      [mainnet.id]: http('<YOUR_RPC_URL>'),
-      [polygon.id]: http('<YOUR_RPC_URL>'),
-      [optimism.id]: http('<YOUR_RPC_URL>'),
-      [arbitrum.id]: http('<YOUR_RPC_URL>'),
-      [base.id]: http('<YOUR_RPC_URL>'),
+      [opBNBTestnet.id]: http('https://opbnb-testnet-rpc.bnbchain.org/'),
+      [mainnet.id]: http('https://bsc-dataseed.binance.org/'),
     },
   });
 

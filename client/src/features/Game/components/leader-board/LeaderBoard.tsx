@@ -1,8 +1,8 @@
+'use client';
 import { Capacitor } from '@capacitor/core';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CiMedal } from 'react-icons/ci';
 import { IoDiamondOutline } from 'react-icons/io5';
 import { RiVipCrownLine } from 'react-icons/ri';
 
@@ -16,20 +16,19 @@ import TabGroup from '@/components/tabs/TabGroup';
 import TabPanel from '@/components/tabs/TabPanel';
 import TabPanels from '@/components/tabs/TabPanels';
 import Tabs from '@/components/tabs/Tabs';
-
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi';
 import NFTS from '@/features/Game/components/leader-board/NFTS';
 import NFTPreview from '@/features/Game/components/NFTpreview/NFTPreview';
-
 import LeaderBoardTable from '@/features/Game/components/Quiz/leader-board-table/LeaderBoardTable';
-import { useAccount } from 'wagmi';
-import Button from '@/components/buttons/Button';
-import { addressFormatter } from '../../lib/addressFormatter';
+import { useQuizContext } from '../../contexts/QuizContext';
+
 
 const LeaderBoard = () => {
   const [showNFTPreview, setShowNFTPreview] = useState(false);
   const [NFTFlowId, setNFTFlowId] = useState<string | undefined>();
   const account = useAccount();
+  const {stakeAmount} = useQuizContext();
   const main = () => {
     return (
       <div>
@@ -42,36 +41,17 @@ const LeaderBoard = () => {
                   : 'flex flex-col gap-4 '
               }
             >
-              <div className='flex items-center justify-between p-2'>
+              <div className='flex items-center justify-between px-6'>
                 <NextImage
                   src='/images/demo-profile.png'
                   alt='Image placeholder'
-                  className='relative h-12 w-12 rounded-full border-2 border-primary-500'
+                  className='relative h-16 w-16 rounded-full border-2 border-primary-500'
                   imgClassName='object-cover rounded-full'
                   fill
                 />
 
-                <div className='flex w-[75%] space-x-2'>
-                <Button
-                  variant='outline'
-                  rightIconClassName='text-primary-500 text-xs'
-                  size='sm'
-                  className=' w-1/2 px-3 py-2 text-white'
-                >
-                  <span className='mx-auto w-full'>
-                    {addressFormatter(account?.address as string)}
-                  </span>
-                </Button>
-                <Button
-                  variant='outline'
-                  rightIconClassName='text-primary-500 text-xs'
-                  size='sm'
-                  className=' w-1/3 px-3 py-2 text-white'
-                >
-                  <span className='mx-auto w-full'>
-                    $ 234 USDC
-                  </span>
-                </Button>
+                <div className='w-[80%] text-sm'>
+                  <ConnectButton  accountStatus={false} />
                 </div>
               </div>
             </div>
@@ -140,10 +120,16 @@ const LeaderBoard = () => {
               )}
               <TabPanels>
                 <TabPanel>
+                
+
                   <NFTS
                     setShowNFTPreview={setShowNFTPreview}
                     setNFTFlowId={setNFTFlowId}
                   />
+
+                  <button onClick={()=>{
+                    stakeAmount("100");
+                  }}>Stake</button>
                 </TabPanel>
 
                 <TabPanel>

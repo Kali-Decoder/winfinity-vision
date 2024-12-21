@@ -36,7 +36,7 @@ type QuizContext = {
   setDeposit: React.Dispatch<React.SetStateAction<number>>;
   stake: number;
   setStake: React.Dispatch<React.SetStateAction<number>>;
-  stakeYourAmount: (amount: number) => Promise<void>;
+  stakeYourAmount: (amount: string) => Promise<void>;
 };
 
 export const QuizContext = React.createContext<QuizContext>({} as QuizContext);
@@ -101,33 +101,59 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
 
   async function stakeYourAmount(amount: string) {
    
+    
     try {
-      const amountEther = parseEther(amount); // Parse the amount to Ether
-      const allowance = await readContract(config,{
+      const amountEther = parseEther(amount); // Convert amount to Wei
+  
+      // Step 1: Check current allowance
+      const allowance: BigNumber = await readContract({
+        ...config,
         address: tokenAddress,
         abi: tokenAbi,
         functionName: 'allowance',
         args: [address, mainContractAddress],
       });
-     
-      if (allowance < amountEther) {
+  
+      console.log('Current Allowance:', allowance.toString());
+  
+      // Step 2: If allowance is less than amount, approve the main contract
+      if (allowance.lt(amountEther)) {
+        console.log('Allowance insufficient. Initiating approval...');
+        
         const approveTx = await writeContract({
           address: tokenAddress,
           abi: tokenAbi,
           functionName: "approve",
           args: [mainContractAddress, amountEther],
         });
+  
+        console.log('Approval Transaction Hash:', approveTx.hash);
+        
+        // Wait for the approval transaction to be mined
+        await approveTx.wait();
+        console.log('Approval Transaction Confirmed');
+      } else {
+        console.log('Sufficient allowance. No approval needed.');
       }
+  
+      // Step 3: Stake the amount
       const stakeTx = await writeContract({
         address: mainContractAddress,
         abi: mainContractABI,
         functionName: "stake",
         args: [amountEther],
       });
-      console.log('stakeTx', stakeTx);
+  
+      console.log('Staking Transaction Hash:', stakeTx.hash);
+      
+      // Wait for the staking transaction to be mined
+      await stakeTx.wait();
+      console.log('Staking Transaction Confirmed');
+  
       toast.success("Deposit and Staked successfully");
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      console.error('Error in staking', error);
+      toast.error('Error in staking: ' + (error?.message || 'Unknown Error'));
     }
   }
 

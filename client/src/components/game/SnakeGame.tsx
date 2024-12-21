@@ -158,12 +158,19 @@ const SnakeGame: React.FC = () => {
   const handleSelectAmount = async (amount: number) => {
     try {
       console.log('Selected amount:', amount);
-      await stakeYourAmount(amount);
-      setStake((prev: any) => prev + amount);
-      setDeposit((prev: any) => prev + amount);
+      
+      // Initiate staking process and wait for it to complete
+      await stakeYourAmount(amount.toString());
+      
+      // Update state only after staking is successful
+      setStake((prev: number) => prev + amount);
+      setDeposit((prev: number) => prev + amount);
+      
+      // Close modals
       setInitialModalOpen(false);
       setPlayModalOpen(true);
-    } catch (error) {
+      
+    } catch (error: any) {
       console.error('Error in handleSelectAmount:', error);
       toast.error('An error occurred while selecting the amount.');
     }

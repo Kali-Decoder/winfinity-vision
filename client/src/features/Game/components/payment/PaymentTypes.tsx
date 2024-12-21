@@ -36,15 +36,19 @@ const PaymentTypes = () => {
     setDepositAmount(percentageValue);
   };
 
-  const {stakeYourAmount} = useQuizContext();
-
+  const { deposit,setDeposit, setStake, stakeYourAmount } = useQuizContext();
 
   const handleDeposit = async () => {
-    console.log('depositAmount', depositAmount);
-    await stakeYourAmount(depositAmount);
-    setShowInfo(false);
+    try {
+      console.log('depositAmount', depositAmount);
+      await stakeYourAmount(depositAmount);
+      setStake((prev: any) => Number(prev) + Number(depositAmount));
+      setDeposit((prev: any) => Number(prev) + Number(depositAmount));
+      setShowInfo(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
 
   return (
     <>
@@ -68,7 +72,7 @@ const PaymentTypes = () => {
                 </Button>
               </div>
               <div className='grid grid-cols-2 items-center justify-between gap-2'>
-                <span className='text-sm'>Balance</span>
+                <span className='text-sm'>Deposit Balance</span>
                 <Button
                   variant='outline'
                   rightIcon={RxCopy}
@@ -77,7 +81,7 @@ const PaymentTypes = () => {
                   className='w-full px-5 py-3 text-white'
                   onClick={() => handleCopy(`354`)}
                 >
-                  <span className='mx-auto w-full'>{userBalance}</span>
+                  <span className='mx-auto w-full'>{deposit} USDC</span>
                 </Button>
               </div>
 
@@ -146,7 +150,10 @@ const PaymentTypes = () => {
                   100%
                 </div>
               </div>
-              <button onClick={handleDeposit} className='mt-4 w-full rounded-full bg-blue-800 px-10 py-2 font-semibold text-white'>
+              <button
+                onClick={handleDeposit}
+                className='mt-4 w-full rounded-full bg-blue-800 px-10 py-2 font-semibold text-white'
+              >
                 Deposit
               </button>
             </div>

@@ -20,6 +20,7 @@ import { useAccount } from 'wagmi';
 
 const Payment = () => {
   const account = useAccount();
+  const {deposit} = useQuizContext();
   return (
     <div>
       {/* {Capacitor.getPlatform() == 'ios' ? (
@@ -65,7 +66,7 @@ const Payment = () => {
               <span className='text-xl'>
                 <InputSvg />
               </span>
-              <span className='font-bold'>Wallet Balance</span>
+              <span className='font-bold'>Profile</span>
             </div>
           </Tab>
           <Tab>
@@ -73,7 +74,7 @@ const Payment = () => {
               <span className='text-3xl'>
                 <OutputSVG />
               </span>
-              <span className='font-bold'>Txn History</span>
+              <span className='font-bold'>History</span>
             </div>
           </Tab>
         </Tabs>
@@ -89,7 +90,7 @@ const Payment = () => {
         </div>
 
         <div className='text-gradient-primary mt-10 flex items-center justify-center gap-2'>
-          <h2 className='text-8xl'>234</h2>
+          <h2 className='text-8xl'>{deposit}</h2>
           <span className='text-4xl'>USDC</span>
         </div>
 

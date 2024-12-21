@@ -36,7 +36,7 @@ type QuizContext = {
   setDeposit: React.Dispatch<React.SetStateAction<number>>;
   stake: number;
   setStake: React.Dispatch<React.SetStateAction<number>>;
-  stakeYourAmount: (amount: number) => void;
+  stakeYourAmount: (amount: number) => Promise<void>;
 };
 
 export const QuizContext = React.createContext<QuizContext>({} as QuizContext);
@@ -100,16 +100,9 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   }, [stake]);
 
   async function stakeYourAmount(amount: string) {
-    console.log(
-      'stakeAmount',
-      amount,
-      address,
-      mainContractAddress,
-      tokenAddress
-    );
+   
     try {
       const amountEther = parseEther(amount); // Parse the amount to Ether
-  
       const allowance = await readContract(config,{
         address: tokenAddress,
         abi: tokenAbi,
@@ -134,8 +127,7 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
       console.log('stakeTx', stakeTx);
       toast.success("Deposit and Staked successfully");
     } catch (error) {
-      console.error('Error in staking', error);
-      toast.error('Error in staking');
+      throw error;
     }
   }
 

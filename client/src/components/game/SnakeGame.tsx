@@ -5,6 +5,8 @@ import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-hot-toast';
+import { IoClose } from 'react-icons/io5';
+
 
 type Position = {
   x: number;
@@ -270,11 +272,15 @@ const SnakeGame: React.FC = () => {
     }
   }, [deposit, stake]);
 
-  console.log(gameStarted, gameOver, deposit);
+  // Functions to close modals
+  const closeInitialModal = () => setInitialModalOpen(false);
+  const closePlayModal = () => setPlayModalOpen(false);
+  const closeGameOverModal = () => setGameOver(false); // Adjust as needed
+  const closePlayAgainModal = () => setPlayAgainModalOpen(false);
 
   return (
     <div
-      className=' relative flex flex-col items-center justify-center p-4'
+      className='relative flex flex-col items-center justify-center p-4'
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -349,7 +355,8 @@ const SnakeGame: React.FC = () => {
 
       {paused && gameStarted && !gameOver && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <IoClose onClick={() => setPaused(false)} />
             <h2 className='text-yellow-500 mb-4 text-center text-2xl font-semibold'>
               Game Paused
             </h2>
@@ -371,7 +378,8 @@ const SnakeGame: React.FC = () => {
       {/* Initial Modal: Choose Deposit & Stake Amount */}
       {initialModalOpen && !gameOver && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <IoClose onClick={closeInitialModal} />
             <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500'>
               Choose Deposit & Stake Amount
             </h2>
@@ -381,19 +389,19 @@ const SnakeGame: React.FC = () => {
             <div className='flex flex-col gap-2'>
               <button
                 onClick={() => handleSelectAmount(10)}
-                className='btn btn-blue-500 hover:bg-blue-600 focus:ring-blue-300 w-full'
+                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
               >
                 $10
               </button>
               <button
                 onClick={() => handleSelectAmount(15)}
-                className='btn btn-blue-500 hover:bg-blue-600 focus:ring-blue-300 w-full'
+                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
               >
                 $15
               </button>
               <button
                 onClick={() => handleSelectAmount(20)}
-                className='btn btn-blue-500 hover:bg-blue-600 focus:ring-blue-300 w-full'
+                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
               >
                 $20
               </button>
@@ -405,7 +413,8 @@ const SnakeGame: React.FC = () => {
       {/* Play Modal: Pay 10 USD to start game */}
       {playModalOpen && !gameStarted && !gameOver && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <IoClose onClick={closePlayModal} />
             <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500'>
               Ready to Play?
             </h2>
@@ -434,7 +443,8 @@ const SnakeGame: React.FC = () => {
       {/* Game Over Modal */}
       {gameOver && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <IoClose onClick={closeGameOverModal} />
             <h2 className='text-red-500 mb-4 text-center text-2xl font-semibold'>
               Game Over
             </h2>
@@ -453,10 +463,11 @@ const SnakeGame: React.FC = () => {
         </div>
       )}
 
-      {/* Play Again Modal (replaces the bottom button) */}
+      {/* Play Again Modal */}
       {playAgainModalOpen && !gameOver && !gameStarted && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <IoClose onClick={closePlayAgainModal} />
             <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500 '>
               Play Again?
             </h2>

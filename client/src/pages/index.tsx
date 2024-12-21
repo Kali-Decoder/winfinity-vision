@@ -7,8 +7,6 @@ import CircularProgress from '@/components/circular-progress/CircularProgress';
 import OnDarkLogo from '@/components/logos/OnDarkLogo';
 import NextImage from '@/components/NextImage';
 
-import QuizContextProvider from '@/features/Game/contexts/QuizContext';
-import TabsContextProvider from '@/features/Game/contexts/TabsContext';
 import Game from '@/features/Game/Game';
 
 import { Platform } from '../constants/types';

@@ -146,9 +146,7 @@ const Game = () => {
 
   const {
     setActiveStep: setActiveQuizStep,
-    setPreQuestions,
-    setQuestions,
-    setActiveQuiz,
+
     activeQuiz,
   } = useQuizContext();
   const [showInviteFriends, setShowInviteFriends] = useState(false); // Track invite modal

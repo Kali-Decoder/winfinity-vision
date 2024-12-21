@@ -39,17 +39,17 @@ const LeaderBoard = () => {
                   : 'flex flex-col gap-4 '
               }
             >
-              <div className='flex items-center justify-between px-6'>
+              <div className='flex items-center justify-between flex-col px-0'>
                 <NextImage
                   src='/images/demo-profile.png'
                   alt='Image placeholder'
-                  className='relative h-16 w-16 rounded-full border-2 border-primary-500'
+                  className='relative h-20 w-20 rounded-full border-2 border-primary-500'
                   imgClassName='object-cover rounded-full'
                   fill
                 />
 
-                <div className='w-[80%] text-sm'>
-                  <ConnectButton showBalance />
+                <div className=' text-sm w-[100%] justify-center items-center flex mt-10'>
+                  <ConnectButton />
                 </div>
               </div>
             </div>

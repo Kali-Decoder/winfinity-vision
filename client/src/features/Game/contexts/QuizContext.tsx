@@ -107,7 +107,7 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   async function stakeYourAmount(amount: string) {
     try {
       const amountEther = parseEther(amount); // Parse the amount to Ether
-      const allowance = await readContract(config, {
+      const allowance = await readContract(config,{
         address: tokenAddress,
         abi: tokenAbi,
         functionName: 'allowance',
@@ -174,7 +174,7 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         args: [address],
       });
  
-      setYieldAmount(Number(yieldAmount.toString())/10**18);  
+      setYieldAmount(Number(Number(yieldAmount).toString())/10**18);
     } catch (error) {
       console.log('error', error);  
     }
@@ -189,12 +189,11 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         args: [address],
       });
       console.log('stake', stake);
-      setStake(Number(stake.toString())/10**18);  
+      setStake(Number(Number(stake).toString())/10**18);  
     } catch (error) {
       console.log('error', error);  
     }
   }
-
 
   async function unstakeYourAmount(amount: string) {
     try {

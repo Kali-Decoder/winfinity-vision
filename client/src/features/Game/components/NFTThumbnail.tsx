@@ -16,7 +16,7 @@ type Props = {
   };
 } & React.ComponentPropsWithRef<'div'>;
 
-
+type Tabs = 'home' | 'leader-board' | 'payment' | 'profile' | 'snake-game';
 
 const NFTThumbnail: React.FC<Props> = ({
   showPrice = false,
@@ -59,8 +59,10 @@ const NFTThumbnail: React.FC<Props> = ({
 
       {showPrice && (
         <div  onClick={() => {
-          const tabName = redirectUrl.split('/').pop(); // Extract the last part of the URL
-          if (tabName) setSelectedTab(tabName); // Set the selected tab dynamically
+          const tabName = redirectUrl.split('/').pop();
+          if (tabName){
+            setSelectedTab(tabName as Tabs);
+          }
           router.push(redirectUrl); // Redirect to the full URL
         }} className='flex w-full justify-center cursor-pointer'>
           <div className='relative -top-14 flex w-3/5 items-center justify-center rounded-3xl bg-white py-5 shadow-md'>

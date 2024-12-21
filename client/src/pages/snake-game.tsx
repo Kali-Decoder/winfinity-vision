@@ -13,7 +13,7 @@ import Payment from '@/features/Game/components/payment/Payment';
 
 const Page = () => {
   const [isClient, setIsClient] = React.useState(false);
-  const { selectedTab, setSelectedTab } = useTabsContext();
+  const { selectedTab } = useTabsContext();
   
 
   React.useEffect(() => {

@@ -3963,6 +3963,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/howler@^2.2.12":
+  version "2.2.12"
+  resolved "https://registry.npmjs.org/@types/howler/-/howler-2.2.12.tgz"
+  integrity sha512-hy769UICzOSdK0Kn1FBk4gN+lswcj1EKRkmiDtMkUGvFfYJzgaDXmVXkSShS2m89ERAatGIPnTUlp2HhfkVo5g==
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.6"
   resolved "https://registry.npmjs.org/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.6.tgz"
@@ -8309,6 +8314,11 @@ hosted-git-info@^4.0.1:
   integrity sha512-kyCuEOWjJqZuDbRHzL8V93NzQhwIB71oFWSyzVo+KPZI+pnQPPxucdkrOZvkLRnrf5URsQM+IJ09Dw29cRALIA==
   dependencies:
     lru-cache "^6.0.0"
+
+howler@^2.2.4:
+  version "2.2.4"
+  resolved "https://registry.npmjs.org/howler/-/howler-2.2.4.tgz"
+  integrity sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==
 
 html-encoding-sniffer@^2.0.1:
   version "2.0.1"

@@ -36,11 +36,8 @@ export default function HomePage() {
     if (loginReady || ['ios', 'android'].includes(platform ?? '')) {
       if (loginReady) {
         return (
-          <QuizContextProvider>
-            <TabsContextProvider>
               <Game />
-            </TabsContextProvider>
-          </QuizContextProvider>
+  
         );
       }
     } else {

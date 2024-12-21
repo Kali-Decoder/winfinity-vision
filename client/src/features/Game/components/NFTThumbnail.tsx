@@ -3,6 +3,7 @@ import React from 'react';
 import clsx from 'clsx';
 import clsxm from '@/lib/clsxm';
 import { useRouter } from 'next/navigation';
+import { useTabsContext } from '../contexts/TabsContext';
 type Props = {
   className?: string;
   showPrice?: boolean;
@@ -15,6 +16,8 @@ type Props = {
   };
 } & React.ComponentPropsWithRef<'div'>;
 
+
+
 const NFTThumbnail: React.FC<Props> = ({
   showPrice = false,
   className = '',
@@ -25,6 +28,7 @@ const NFTThumbnail: React.FC<Props> = ({
 }) => {
 
   const router = useRouter();
+    const { selectedTab,setSelectedTab } = useTabsContext();
 
   return (
     <div {...rest}>
@@ -54,7 +58,11 @@ const NFTThumbnail: React.FC<Props> = ({
       </div>
 
       {showPrice && (
-        <div onClick={()=>router.push(redirectUrl)} className='flex w-full justify-center cursor-pointer'>
+        <div  onClick={() => {
+          const tabName = redirectUrl.split('/').pop(); // Extract the last part of the URL
+          if (tabName) setSelectedTab(tabName); // Set the selected tab dynamically
+          router.push(redirectUrl); // Redirect to the full URL
+        }} className='flex w-full justify-center cursor-pointer'>
           <div className='relative -top-14 flex w-3/5 items-center justify-center rounded-3xl bg-white py-5 shadow-md'>
             <div className='flex gap-1 text-black'>
               <span

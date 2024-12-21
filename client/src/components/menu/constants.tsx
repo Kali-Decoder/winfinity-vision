@@ -16,6 +16,7 @@ export const menuItems = [
   // },
   {
     name: 'payment',
+    path: '/',
     icon: <IoPersonOutline />,
   },
   // {

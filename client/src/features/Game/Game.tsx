@@ -24,9 +24,7 @@ import {
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import { useTabsContext } from '@/features/Game/contexts/TabsContext';
 
-
-const Game = () => {
-
+export const home = () => {
   const {
     setActiveStep: setActiveQuizStep,
     setPreQuestions,
@@ -76,76 +74,87 @@ const Game = () => {
       questions[category.player?.name || category.team?.name || 'Lebron James']
     );
   };
+  return (
+    <>
+      <section className='mb-3 max-w-[95vw] space-y-9 mobile-demo:w-[450px]'>
 
-  const home = () => {
-    return (
-      <>
-        <section className='mb-3 max-w-[95vw] space-y-9 mobile-demo:w-[450px]'>
- 
-    
-          {/* Trending and Tier Quizzes */}
-          <TabPanel className='space-y-9'>
-            <div>
-              <h2>Trending Quiz Bets</h2>
-              <Carousel
-                indicators={false}
-                className='left-2/4 w-screen -translate-x-2/4 items-center justify-center child:gap-2 mobile-demo:w-[500px]'
+  
+        {/* Trending and Tier Quizzes */}
+        <TabPanel className='space-y-9'>
+          <div>
+            <h2>Trending Quiz Bets</h2>
+            <Carousel
+              indicators={false}
+              className='left-2/4 w-screen -translate-x-2/4 items-center justify-center child:gap-2 mobile-demo:w-[500px]'
+            >
+              {Object.keys(trendingQuizzes).map((quizIdentifier, index) => (
+                <QuizCard
+                  key={index}
+                  players={trendingQuizzes[quizIdentifier].players}
+                  title={trendingQuizzes[quizIdentifier].title}
+                  image={trendingQuizzes[quizIdentifier].image}
+                  onClick={() => handleTrendingQuizClick(quizIdentifier)}
+                />
+              ))}
+            </Carousel>
+          </div>
+          <div>
+            <h2>By Tier Quiz Bets</h2>
+            <Carousel
+              indicators={false}
+              className='left-2/4 w-screen -translate-x-2/4 items-center justify-center child:gap-2 mobile-demo:w-[500px]'
+            >
+              {Object.keys(tierQuizzes).map((quizIdentifier, index) => (
+                <QuizCard
+                  key={index}
+                  players={tierQuizzes[quizIdentifier].players}
+                  title={tierQuizzes[quizIdentifier].title}
+                  type={tierQuizzes[quizIdentifier].type}
+                  image={tierQuizzes[quizIdentifier].image}
+                  onClick={() => handleTierQuizClick(quizIdentifier)}
+                />
+              ))}
+            </Carousel>
+          </div>
+
+          {/* Invite Friends Section */}
+          <div>
+            <div className='flex items-center justify-between gap-3'>
+              <h2 className='text-lg font-bold text-primary-500'>
+                Invite Friends
+              </h2>
+              <button
+                onClick={() => setShowInviteFriends(true)}
+                className='text-gradient-primary text-sm font-bold'
               >
-                {Object.keys(trendingQuizzes).map((quizIdentifier, index) => (
-                  <QuizCard
-                    key={index}
-                    players={trendingQuizzes[quizIdentifier].players}
-                    title={trendingQuizzes[quizIdentifier].title}
-                    image={trendingQuizzes[quizIdentifier].image}
-                    onClick={() => handleTrendingQuizClick(quizIdentifier)}
-                  />
-                ))}
-              </Carousel>
+                + Invite Friends
+              </button>
             </div>
-            <div>
-              <h2>By Tier Quiz Bets</h2>
-              <Carousel
-                indicators={false}
-                className='left-2/4 w-screen -translate-x-2/4 items-center justify-center child:gap-2 mobile-demo:w-[500px]'
-              >
-                {Object.keys(tierQuizzes).map((quizIdentifier, index) => (
-                  <QuizCard
-                    key={index}
-                    players={tierQuizzes[quizIdentifier].players}
-                    title={tierQuizzes[quizIdentifier].title}
-                    type={tierQuizzes[quizIdentifier].type}
-                    image={tierQuizzes[quizIdentifier].image}
-                    onClick={() => handleTierQuizClick(quizIdentifier)}
-                  />
-                ))}
-              </Carousel>
-            </div>
+            <PlayersInfiniteScroll players={players} className='mt-6' />
+          </div>
+        </TabPanel>
+      </section>
 
-            {/* Invite Friends Section */}
-            <div>
-              <div className='flex items-center justify-between gap-3'>
-                <h2 className='text-lg font-bold text-primary-500'>
-                  Invite Friends
-                </h2>
-                <button
-                  onClick={() => setShowInviteFriends(true)}
-                  className='text-gradient-primary text-sm font-bold'
-                >
-                  + Invite Friends
-                </button>
-              </div>
-              <PlayersInfiniteScroll players={players} className='mt-6' />
-            </div>
-          </TabPanel>
-        </section>
+      {/* Modal for Invite Friends */}
+      {showInviteFriends && <InviteFriends setOpen={setShowInviteFriends} />}
 
-        {/* Modal for Invite Friends */}
-        {showInviteFriends && <InviteFriends setOpen={setShowInviteFriends} />}
+      {createPortal(<Menu />, document.body)}
+    </>
+  );
+};
+const Game = () => {
 
-        {createPortal(<Menu />, document.body)}
-      </>
-    );
-  };
+  const {
+    setActiveStep: setActiveQuizStep,
+    setPreQuestions,
+    setQuestions,
+    setActiveQuiz,
+    activeQuiz,
+  } = useQuizContext();
+  const [showInviteFriends, setShowInviteFriends] = useState(false); // Track invite modal
+  const { selectedTab } = useTabsContext();
+
+   
 
   const renderGame = () => {
     if (activeQuiz) return <Quiz />;

@@ -7,45 +7,26 @@ import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 
 import { WagmiProvider } from 'wagmi';
 import { config } from '@/helper';
+import QuizContextProvider from '@/features/Game/contexts/QuizContext';
+import TabsContextProvider from '@/features/Game/contexts/TabsContext';
+
 function MyApp({ Component, pageProps }: AppProps) {
   const queryClient = new QueryClient();
-  return (
-    <>
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <RainbowKitProvider>
-            <div className='relative'>
-              <Toaster
-                position='top-center'
-                reverseOrder={false}
-                gutter={8}
-                containerClassName=''
-                containerStyle={{}}
-                toastOptions={{
-                  // Define default options
-                  className: '',
-                  duration: 5000,
-                  style: {
-                    background: '#363636',
-                    color: '#fff',
-                  },
 
-                  // Default options for specific types
-                  success: {
-                    duration: 3000,
-                    theme: {
-                      primary: 'green',
-                      secondary: 'black',
-                    },
-                  },
-                }}
-              />
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>     
+          {/* Provide contexts and render the page */}
+          <QuizContextProvider>
+            <TabsContextProvider>
               <Component {...pageProps} />
-            </div>
-          </RainbowKitProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </>
+            </TabsContextProvider>
+          </QuizContextProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+      
+    </WagmiProvider>
   );
 }
 

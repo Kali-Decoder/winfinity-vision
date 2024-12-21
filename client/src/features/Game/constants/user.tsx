@@ -24,6 +24,15 @@ export const games = [
  
   },
   {
+    name: 'Memory Matching Game',
+    gifSrc: 'https://user-images.githubusercontent.com/30567608/42864014-491ecdc8-8a65-11e8-90fb-9cecac056549.gif',
+    amountToDeposit: 40,
+    description:"A Classic Memory Matching Game. Match the cards to win.",
+    points: 4000,
+    redirectUrl:"/piano"
+ 
+  },
+  {
     name: 'Pin the Needle',
     gifSrc: 'https://149493502.v2.pressablecdn.com/wp-content/uploads/2015/02/aa-level-24-screenshot.jpg',
     amountToDeposit: 20,

@@ -163,7 +163,6 @@ const SnakeGame: React.FC = () => {
       
       // Initiate staking process and wait for it to complete
       await stakeYourAmount(amount.toString());
-      
       // Update state only after staking is successful
       setStake((prev: number) => prev + amount);
       setDeposit((prev: number) => prev + amount);

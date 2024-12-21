@@ -37,6 +37,10 @@ type QuizContext = {
   stake: number;
   setStake: React.Dispatch<React.SetStateAction<number>>;
   stakeYourAmount: (amount: string) => Promise<void>;
+  yieldAmount: number;
+  getStake : () => Promise<void>;
+  unstakeYourAmount: (amount: string) => Promise<void>;
+  claimYourAmount: () => Promise<void>;
 };
 
 export const QuizContext = React.createContext<QuizContext>({} as QuizContext);
@@ -52,6 +56,7 @@ export const useQuizContext = () => {
 const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   const { address, chain } = useAccount();
   const { data: hash, writeContractAsync, status } = useWriteContract();
+  const [yieldAmount, setYieldAmount] = useState<number>(0);
   const [activeQuiz, setActiveQuiz] = useState(false);
   const [activeStep, setActiveStep] =
     useState<Quiz['activeStep']>('pre-questions');
@@ -141,6 +146,7 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         {
           onSuccess(data) {
             console.log('data', data);
+             getStake();
             toast.success('Staking successful');
           },
           onError(error) {
@@ -159,6 +165,110 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  async function getYieldAmount(){
+    try {
+      const yieldAmount = await readContract(config, {
+        address: mainContractAddress,
+        abi: mainContractABI,
+        functionName: 'currentUserRewards',
+        args: [address],
+      });
+ 
+      setYieldAmount(Number(yieldAmount.toString())/10**18);  
+    } catch (error) {
+      console.log('error', error);  
+    }
+  }
+
+  async function getStake(){
+    try {
+      const stake = await readContract(config, {
+        address: mainContractAddress,
+        abi: mainContractABI,
+        functionName: 'userStake',
+        args: [address],
+      });
+      console.log('stake', stake);
+      setStake(Number(stake.toString())/10**18);  
+    } catch (error) {
+      console.log('error', error);  
+    }
+  }
+
+
+  async function unstakeYourAmount(amount: string) {
+    try {
+      const amountEther = parseEther(amount);
+      const unstakeTx = await writeContractAsync(
+        {
+          address: mainContractAddress,
+          abi: mainContractABI,
+          functionName: 'unstake',
+          args: [amountEther],
+        },
+        {
+          onSuccess(data) {
+            console.log('data', data);
+            getStake();
+            toast.success('Unstaking successful');
+          },
+          onError(error) {
+            console.log('error', error);
+            throw new Error('Unstaking failed');
+          },
+          onSettled(data, error) {
+            // You can perform additional actions here if needed
+            console.log('Approval settled');
+          },
+        }
+      );
+      console.log('unstakeTx', unstakeTx);
+    }catch (error) {
+      throw error;
+    }
+  }
+
+  async function claimYourAmount() {
+    try {
+      const claimTx = await writeContractAsync(
+        {
+          address: mainContractAddress,
+          abi: mainContractABI,
+          functionName: 'claim',
+          args: [],
+        },
+        {
+          onSuccess(data) {
+            console.log('data', data);
+            getStake();
+            toast.success('Claim successful');
+          },
+          onError(error) {
+            console.log('error', error);
+            throw new Error('Claim failed');
+          },
+          onSettled(data, error) {
+            // You can perform additional actions here if needed
+            console.log('Approval settled');
+          },
+        }
+      );
+      console.log('claimTx', claimTx);
+      
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getYieldAmount();
+      getStake();
+    },30000);
+    return () => clearInterval(interval);
+  }, [address]);
+  
   return (
     <QuizContext.Provider
       value={{
@@ -179,6 +289,10 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         setDeposit,
         setStake,
         stakeYourAmount,
+        yieldAmount,
+        getStake,
+        unstakeYourAmount,
+        claimYourAmount
       }}
     >
       {children}

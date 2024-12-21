@@ -36,7 +36,8 @@ const PaymentTypes = () => {
     setDepositAmount(percentageValue);
   };
 
-  const { deposit,setDeposit, setStake, stakeYourAmount } = useQuizContext();
+  const { setDeposit, setStake, stakeYourAmount, stake, yieldAmount } =
+    useQuizContext();
 
   const handleDeposit = async () => {
     try {
@@ -65,6 +66,7 @@ const PaymentTypes = () => {
                   rightIconClassName='text-primary-500 text-xl'
                   size='base'
                   className='w-full px-5 py-3 text-white'
+                  onClick={() => handleCopy(account?.address as string)}
                 >
                   <span className='mx-auto w-full'>
                     {addressFormatter(account?.address as string)}
@@ -72,16 +74,24 @@ const PaymentTypes = () => {
                 </Button>
               </div>
               <div className='grid grid-cols-2 items-center justify-between gap-2'>
-                <span className='text-sm'>Deposit Balance</span>
+                <span className='text-sm'>Stake Amount</span>
                 <Button
                   variant='outline'
-                  rightIcon={RxCopy}
-                  rightIconClassName='text-primary-500 text-xl'
                   size='base'
                   className='w-full px-5 py-3 text-white'
-                  onClick={() => handleCopy(`354`)}
                 >
-                  <span className='mx-auto w-full'>{deposit} USDC</span>
+                  <span className='mx-auto w-full'>{stake} USDC</span>
+                </Button>
+              </div>
+
+              <div className='grid grid-cols-2 items-center justify-between gap-2'>
+                <span className='text-sm'>Yield</span>
+                <Button
+                  variant='outline'
+                  size='base'
+                  className='w-full px-5 py-3 text-white'
+                >
+                  <span className='mx-auto w-full'>{yieldAmount} USDC</span>
                 </Button>
               </div>
 

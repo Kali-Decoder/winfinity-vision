@@ -29,8 +29,6 @@ type Pipe = {
 
 const FlappyBird: React.FC = () => {
   // const { deposit, stake, setDeposit,stakeAmount } = useUserBalance();
-
-
   const [birdY, setBirdY] = useState(GAME_HEIGHT / 2);
   const [birdVel, setBirdVel] = useState(0);
   const [pipes, setPipes] = useState<Pipe[]>([]);

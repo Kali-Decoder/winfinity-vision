@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
+import { useQuizContext } from "@/features/Game/contexts/QuizContext";
 import React, { useEffect, useRef, useState } from "react";
 
 import {toast} from "react-hot-toast";
@@ -17,9 +18,8 @@ const GRID_SIZE = 20;
 const SQUARE_SIZE = 20;
 
 const SnakeGame: React.FC = () => {
-  // const { deposit, stake, setDeposit, stakeAmount,setStake } = useUserBalance();
-
-
+  const { deposit,stake,setDeposit,setStake,stakeYourAmount} = useQuizContext();
+  const total = deposit + stake;
   const [snake, setSnake] = useState<Position[]>([{ x: 5, y: 5 }]);
   const [food, setFood] = useState<Position>({ x: 10, y: 10 });
   const [direction, setDirection] = useState<"UP" | "DOWN" | "LEFT" | "RIGHT">("RIGHT");
@@ -117,7 +117,7 @@ const SnakeGame: React.FC = () => {
         if (reward) {
           reward = reward + 10;
         }
-        // setDeposit(prevDeposit => prevDeposit + reward);
+        setDeposit((prevDeposit:any) => prevDeposit + reward);
       }
       setGameOver(true);
     } catch (error) {
@@ -136,11 +136,11 @@ const SnakeGame: React.FC = () => {
       setScore(0);
       setGameStarted(false);
   
-      // if (deposit >= 10) {
-      //   setPlayModalOpen(true);
-      // } else if (deposit === 0 && stake === 0) {
-      //   setInitialModalOpen(true);
-      // }
+      if (deposit >= 10) {
+        setPlayModalOpen(true);
+      } else if (deposit === 0 && stake === 0) {
+        setInitialModalOpen(true);
+      }
     } catch (error) {
       console.error("Error in restartGame:", error);
       toast.error("An error occurred while restarting the game.");
@@ -150,9 +150,9 @@ const SnakeGame: React.FC = () => {
   const handleSelectAmount = async (amount: number) => {
     try {
       console.log("Selected amount:", amount);
-      // await stakeAmount(amount);
-      // setStake(prev => prev + amount);
-      // setDeposit(prev => prev + amount);
+      await stakeYourAmount(amount);
+      setStake((prev:any) => prev + amount);
+      setDeposit((prev:any) => prev + amount);
       setInitialModalOpen(false);
       setPlayModalOpen(true);
     } catch (error) {
@@ -163,13 +163,13 @@ const SnakeGame: React.FC = () => {
   
   const handleConfirmPlay = () => {
     try {
-      // if (deposit >= 10) {
-      //   setDeposit(prev => prev - 10);
-      //   setGameStarted(true);
-      //   setPlayModalOpen(false);
-      // } else {
-      //   toast.error("Not enough deposit to play.");
-      // }
+      if (deposit >= 10) {
+        setDeposit((prev:any) => prev - 10);
+        setGameStarted(true);
+        setPlayModalOpen(false);
+      } else {
+        toast.error("Not enough deposit to play.");
+      }
     } catch (error) {
       console.error("Error in handleConfirmPlay:", error);
       toast.error("An error occurred while confirming play.");
@@ -178,15 +178,15 @@ const SnakeGame: React.FC = () => {
   
   const handlePlayAgain = () => {
     try {
-      // if (deposit >= 10) {
-      //   setPlayModalOpen(true);
-      // } else {
-      //   if (deposit === 0 && stake === 0) {
-      //     setInitialModalOpen(true);
-      //   } else {
-      //     toast.error("Not enough deposit to play again.");
-      //   }
-      // }
+      if (deposit >= 10) {
+        setPlayModalOpen(true);
+      } else {
+        if (deposit === 0 && stake === 0) {
+          setInitialModalOpen(true);
+        } else {
+          toast.error("Not enough deposit to play again.");
+        }
+      }
       setPlayAgainModalOpen(false);
     } catch (error) {
       console.error("Error in handlePlayAgain:", error);
@@ -199,21 +199,6 @@ const SnakeGame: React.FC = () => {
     setPlayModalOpen(false);
   };
 
-  // const handlePlayAgain = () => {
-  //   // If deposit >= 10, show the play modal again
-  //   if (deposit >= 10) {
-  //     setPlayModalOpen(true);
-  //   } else {
-  //     // If not enough deposit, show initial modal again
-  //     if (deposit === 0 && stake === 0) {
-  //       setInitialModalOpen(true);
-  //     } else {
-  //       toast.error("Not enough deposit to play again.");
-  //       // alert("Not enough deposit to play again.");
-  //     }
-  //   }
-  //   setPlayAgainModalOpen(false);
-  // };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
@@ -263,14 +248,14 @@ const SnakeGame: React.FC = () => {
     return () => clearInterval(interval);
   }, [snake, direction, gameOver, paused, gameStarted]);
 
-  // useEffect(() => {
-  //   // If no funds at all, open deposit modal
-  //   if (deposit === 0 && stake === 0) {
-  //     setInitialModalOpen(true);
-  //   } else {
-  //     setInitialModalOpen(false);
-  //   }
-  // }, [deposit, stake]);
+  useEffect(() => {
+    // If no funds at all, open deposit modal
+    if (deposit === 0 && stake === 0) {
+      setInitialModalOpen(true);
+    } else {
+      setInitialModalOpen(false);
+    }
+  }, [deposit, stake]);
 
   return (
     <div
@@ -426,11 +411,11 @@ const SnakeGame: React.FC = () => {
       )}
 
       {/* Button that triggers the Play Again modal if deposit >= 10 and game is not started or over */}
-      {/* {deposit >= 10 && !gameStarted && !gameOver && (
+      {deposit >= 10 && !gameStarted && !gameOver && (
         <button onClick={() => setPlayAgainModalOpen(true)} className="btn btn-success px-4 py-2 rounded-lg w-1/2 mt-7">
           Play Again
         </button>
-      )} */}
+      )}
 
       {/* On-Screen Directional Buttons */}
       {gameStarted && !gameOver && (

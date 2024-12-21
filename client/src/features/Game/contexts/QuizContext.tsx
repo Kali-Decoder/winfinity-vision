@@ -1,15 +1,22 @@
-import React, { ReactNode, useContext, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import {
   NFTInfo,
   PreQuestions,
   Question,
   Quiz,
 } from '@/features/Game/types/Types';
-
+import { config } from '@/helper';
+import { toast } from 'react-hot-toast';
+import { parseEther } from 'ethers';
 import { PostQuestions } from '../types/Types';
-import { ethers } from 'ethers';
 import { useAccount, useWriteContract } from 'wagmi';
-import { mainContractABI, mainContractAddress } from '@/contract-constant';
+import {
+  mainContractABI,
+  mainContractAddress,
+  tokenAbi,
+  tokenAddress,
+} from '@/contract-constant';
+import { readContract } from '@wagmi/core'
 type QuizContext = {
   activeQuiz: boolean;
   setActiveQuiz: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +32,11 @@ type QuizContext = {
   setPostQuestions: React.Dispatch<React.SetStateAction<PostQuestions>>;
   NFTInfo: NFTInfo;
   setNFTInfo: React.Dispatch<React.SetStateAction<NFTInfo>>;
-  stakeAmount: (amount: string) => void;
+  deposit: number;
+  setDeposit: React.Dispatch<React.SetStateAction<number>>;
+  stake: number;
+  setStake: React.Dispatch<React.SetStateAction<number>>;
+  stakeYourAmount: (amount: number) => void;
 };
 
 export const QuizContext = React.createContext<QuizContext>({} as QuizContext);
@@ -64,17 +75,68 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
     version: '',
   });
 
- 
+  const [deposit, setDeposit] = useState<number>(() => {
+    const storedDeposit =
+      typeof window !== 'undefined' ? localStorage.getItem('deposit') : null;
+    return storedDeposit ? JSON.parse(storedDeposit) : 0;
+  });
 
-  async function stakeAmount(amount:string) {
-    console.log('stakeAmount', amount);
-    writeContract({
-      address: mainContractAddress,
-      abi: mainContractABI,
-      functionName: 'stake',
-      args: [ethers.utils.parseEther(amount)],
-    });
+  const [stake, setStake] = useState<number>(() => {
+    const storedStake =
+      typeof window !== 'undefined' ? localStorage.getItem('stake') : null;
+    return storedStake ? JSON.parse(storedStake) : 0;
+  });
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('deposit', JSON.stringify(deposit));
+    }
+  }, [deposit]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('stake', JSON.stringify(stake));
+    }
+  }, [stake]);
+
+  async function stakeYourAmount(amount: string) {
+    console.log(
+      'stakeAmount',
+      amount,
+      address,
+      mainContractAddress,
+      tokenAddress
+    );
+    try {
+      const amountEther = parseEther(amount); // Parse the amount to Ether
+  
+      const allowance = await readContract(config,{
+        address: tokenAddress,
+        abi: tokenAbi,
+        functionName: 'allowance',
+        args: [address, mainContractAddress],
+      });
+     
+      if (allowance < amountEther) {
+        const approveTx = await writeContract({
+          address: tokenAddress,
+          abi: tokenAbi,
+          functionName: "approve",
+          args: [mainContractAddress, amountEther],
+        });
+      }
+      const stakeTx = await writeContract({
+        address: mainContractAddress,
+        abi: mainContractABI,
+        functionName: "stake",
+        args: [amountEther],
+      });
+      console.log('stakeTx', stakeTx);
+      toast.success("Deposit and Staked successfully");
+    } catch (error) {
+      console.error('Error in staking', error);
+      toast.error('Error in staking');
+    }
   }
 
   return (
@@ -92,7 +154,11 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         setPostQuestions,
         NFTInfo,
         setNFTInfo,
-        stakeAmount
+        deposit,
+        stake,
+        setDeposit,
+        setStake,
+        stakeYourAmount,
       }}
     >
       {children}

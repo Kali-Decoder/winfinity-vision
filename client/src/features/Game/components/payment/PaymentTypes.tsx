@@ -15,6 +15,7 @@ import Dialog from '@/dialog/Dialog';
 
 import { addressFormatter } from '@/features/Game/lib/addressFormatter';
 import { useAccount } from 'wagmi';
+import { useQuizContext } from '../../contexts/QuizContext';
 
 const PaymentTypes = () => {
   const [copiedNotification, setCopiedNotification] = useState(false);
@@ -34,6 +35,16 @@ const PaymentTypes = () => {
     const percentageValue = (percentage / 100) * userBalance;
     setDepositAmount(percentageValue);
   };
+
+  const {stakeYourAmount} = useQuizContext();
+
+
+  const handleDeposit = async () => {
+    console.log('depositAmount', depositAmount);
+    await stakeYourAmount(depositAmount);
+    setShowInfo(false);
+  };
+
 
   return (
     <>
@@ -135,7 +146,7 @@ const PaymentTypes = () => {
                   100%
                 </div>
               </div>
-              <button className='mt-4 w-full rounded-full bg-blue-800 px-10 py-2 font-semibold text-white'>
+              <button onClick={handleDeposit} className='mt-4 w-full rounded-full bg-blue-800 px-10 py-2 font-semibold text-white'>
                 Deposit
               </button>
             </div>

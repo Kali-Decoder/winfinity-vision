@@ -1,12 +1,13 @@
 'use  client';
-import React from 'react';
+import React, { use } from 'react';
 import { createPortal } from 'react-dom';
 import Menu from '@/components/menu/Menu';
 import NextImage from '@/components/NextImage';
 import SnakeGame from '@/components/game/SnakeGame';
+import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 const page = () => {
   const [isClient, setIsClient] = React.useState(false);
-
+ 
   React.useEffect(() => {
     setIsClient(true);
   }, []);

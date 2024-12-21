@@ -21,14 +21,12 @@ import { useAccount } from 'wagmi';
 import NFTS from '@/features/Game/components/leader-board/NFTS';
 import NFTPreview from '@/features/Game/components/NFTpreview/NFTPreview';
 import LeaderBoardTable from '@/features/Game/components/Quiz/leader-board-table/LeaderBoardTable';
-import { useQuizContext } from '../../contexts/QuizContext';
-
 
 const LeaderBoard = () => {
   const [showNFTPreview, setShowNFTPreview] = useState(false);
   const [NFTFlowId, setNFTFlowId] = useState<string | undefined>();
   const account = useAccount();
-  const {stakeAmount} = useQuizContext();
+
   const main = () => {
     return (
       <div>
@@ -126,10 +124,6 @@ const LeaderBoard = () => {
                     setShowNFTPreview={setShowNFTPreview}
                     setNFTFlowId={setNFTFlowId}
                   />
-
-                  <button onClick={()=>{
-                    stakeAmount("100");
-                  }}>Stake</button>
                 </TabPanel>
 
                 <TabPanel>

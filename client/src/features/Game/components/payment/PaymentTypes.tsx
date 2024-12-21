@@ -41,7 +41,7 @@ const PaymentTypes = () => {
   const handleDeposit = async () => {
     try {
       console.log('depositAmount', depositAmount);
-      await stakeYourAmount(depositAmount);
+      await stakeYourAmount(depositAmount.toString());
       setStake((prev: any) => Number(prev) + Number(depositAmount));
       setDeposit((prev: any) => Number(prev) + Number(depositAmount));
       setShowInfo(false);

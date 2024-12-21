@@ -9,7 +9,7 @@ import { config } from '@/helper';
 import { toast } from 'react-hot-toast';
 import { parseEther } from 'ethers';
 import { PostQuestions } from '../types/Types';
-import { useAccount, useWriteContract } from 'wagmi';
+import { useAccount, useWriteContract,useReadContract } from 'wagmi';
 import {
   mainContractABI,
   mainContractAddress,
@@ -51,7 +51,7 @@ export const useQuizContext = () => {
 
 const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   const { address, chain } = useAccount();
-  const { data: hash, writeContract } = useWriteContract();
+  const { data: hash, writeContractAsync,status } = useWriteContract();
   const [activeQuiz, setActiveQuiz] = useState(false);
   const [activeStep, setActiveStep] =
     useState<Quiz['activeStep']>('pre-questions');
@@ -101,59 +101,33 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
 
   async function stakeYourAmount(amount: string) {
    
-    
     try {
-      const amountEther = parseEther(amount); // Convert amount to Wei
-  
-      // Step 1: Check current allowance
-      const allowance: BigNumber = await readContract({
-        ...config,
+      const amountEther = parseEther(amount); // Parse the amount to Ether
+      const allowance = await readContract(config,{
         address: tokenAddress,
         abi: tokenAbi,
         functionName: 'allowance',
         args: [address, mainContractAddress],
       });
-  
-      console.log('Current Allowance:', allowance.toString());
-  
-      // Step 2: If allowance is less than amount, approve the main contract
-      if (allowance.lt(amountEther)) {
-        console.log('Allowance insufficient. Initiating approval...');
-        
-        const approveTx = await writeContract({
+     
+      if (allowance < amountEther) {
+        const approveTx = await writeContractAsync(config,{
           address: tokenAddress,
           abi: tokenAbi,
           functionName: "approve",
           args: [mainContractAddress, amountEther],
         });
-  
-        console.log('Approval Transaction Hash:', approveTx.hash);
-        
-        // Wait for the approval transaction to be mined
-        await approveTx.wait();
-        console.log('Approval Transaction Confirmed');
-      } else {
-        console.log('Sufficient allowance. No approval needed.');
       }
-  
-      // Step 3: Stake the amount
-      const stakeTx = await writeContract({
+      const stakeTx = await writeContractAsync(config,{
         address: mainContractAddress,
         abi: mainContractABI,
         functionName: "stake",
         args: [amountEther],
       });
-  
-      console.log('Staking Transaction Hash:', stakeTx.hash);
-      
-      // Wait for the staking transaction to be mined
-      await stakeTx.wait();
-      console.log('Staking Transaction Confirmed');
-  
+      console.log('stakeTx', stakeTx);
       toast.success("Deposit and Staked successfully");
-    } catch (error: any) {
-      console.error('Error in staking', error);
-      toast.error('Error in staking: ' + (error?.message || 'Unknown Error'));
+    } catch (error) {
+      throw error;
     }
   }
 

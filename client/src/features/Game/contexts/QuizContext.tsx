@@ -9,14 +9,14 @@ import { config } from '@/helper';
 import { toast } from 'react-hot-toast';
 import { parseEther } from 'ethers';
 import { PostQuestions } from '../types/Types';
-import { useAccount, useWriteContract,useReadContract } from 'wagmi';
+import { useAccount, useWriteContract, useReadContract } from 'wagmi';
 import {
   mainContractABI,
   mainContractAddress,
   tokenAbi,
   tokenAddress,
 } from '@/contract-constant';
-import { readContract } from '@wagmi/core'
+import { readContract } from '@wagmi/core';
 type QuizContext = {
   activeQuiz: boolean;
   setActiveQuiz: React.Dispatch<React.SetStateAction<boolean>>;
@@ -51,7 +51,7 @@ export const useQuizContext = () => {
 
 const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   const { address, chain } = useAccount();
-  const { data: hash, writeContractAsync,status } = useWriteContract();
+  const { data: hash, writeContractAsync, status } = useWriteContract();
   const [activeQuiz, setActiveQuiz] = useState(false);
   const [activeStep, setActiveStep] =
     useState<Quiz['activeStep']>('pre-questions');
@@ -100,32 +100,60 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   }, [stake]);
 
   async function stakeYourAmount(amount: string) {
-   
     try {
       const amountEther = parseEther(amount); // Parse the amount to Ether
-      const allowance = await readContract(config,{
+      const allowance = await readContract(config, {
         address: tokenAddress,
         abi: tokenAbi,
         functionName: 'allowance',
         args: [address, mainContractAddress],
       });
-     
-      if (allowance < amountEther) {
-        const approveTx = await writeContractAsync(config,{
-          address: tokenAddress,
-          abi: tokenAbi,
-          functionName: "approve",
-          args: [mainContractAddress, amountEther],
-        });
+
+      if (Number(allowance) < Number(amountEther.toString())) {
+        const approveTx = await writeContractAsync(
+          {
+            address: tokenAddress,
+            abi: tokenAbi,
+            functionName: 'approve',
+            args: [mainContractAddress, amountEther],
+          },
+          {
+            onSuccess(data) {
+              toast.success('Approval successful');
+            },
+            onError(error) {
+              throw new Error('Approval failed');
+            },
+            onSettled(data, error) {
+              // You can perform additional actions here if needed
+              console.log('Approval settled');
+            },
+          }
+        );
       }
-      const stakeTx = await writeContractAsync(config,{
-        address: mainContractAddress,
-        abi: mainContractABI,
-        functionName: "stake",
-        args: [amountEther],
-      });
+      const stakeTx = await writeContractAsync(
+        {
+          address: mainContractAddress,
+          abi: mainContractABI,
+          functionName: 'stake',
+          args: [amountEther],
+        },
+        {
+          onSuccess(data) {
+            console.log('data', data);
+            toast.success('Staking successful');
+          },
+          onError(error) {
+            console.log('error', error);
+            throw new Error('Staking failed');
+          },
+          onSettled(data, error) {
+            // You can perform additional actions here if needed
+            console.log('Approval settled');
+          },
+        }
+      );
       console.log('stakeTx', stakeTx);
-      toast.success("Deposit and Staked successfully");
     } catch (error) {
       throw error;
     }

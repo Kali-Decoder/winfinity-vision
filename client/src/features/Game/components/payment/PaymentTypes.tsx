@@ -25,8 +25,14 @@ const PaymentTypes = () => {
   const [unstakeAmount, setUnstakeAmount] = useState(0);
   const [userBalance, setUserBalance] = useState(234);
   const [timeLeft, setTimeLeft] = useState<number>(24 * 60 * 60);
-  const { setDeposit, setStake, stakeYourAmount, stake, yieldAmount,unstakeYourAmount } =
-  useQuizContext();
+  const {
+    setDeposit,
+    setStake,
+    stakeYourAmount,
+    stake,
+    yieldAmount,
+    unstakeYourAmount,
+  } = useQuizContext();
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
@@ -35,13 +41,13 @@ const PaymentTypes = () => {
     return () => clearInterval(timer); // Cleanup interval on component unmount
   }, []);
 
-  const formatTime = (seconds:number) => {
+  const formatTime = (seconds: number) => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${hrs.toString().padStart(2, "0")}:${mins
+    return `${hrs.toString().padStart(2, '0')}:${mins
       .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+      .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
   const account = useAccount();
   const handleCopy = (text: string) => {
@@ -56,8 +62,6 @@ const PaymentTypes = () => {
     const percentageValue = (percentage / 100) * userBalance;
     setDepositAmount(percentageValue);
   };
-
-
 
   const handleDeposit = async () => {
     try {
@@ -126,7 +130,6 @@ const PaymentTypes = () => {
                 </Button>
               </div>
 
-
               <div className='grid grid-cols-2 items-center justify-between gap-2'>
                 <span className='text-sm'>Lock Period</span>
                 <Button
@@ -138,23 +141,30 @@ const PaymentTypes = () => {
                 </Button>
               </div>
 
-              <Button
-                onClick={() => setShowInfo(!showInfo)}
-                variant='outline'
-                size='lg'
-                className='mt-20'
-              >
-                Deposit
-              </Button>
+              <div className='flex w-full gap-3'>
+                <Button
+                  onClick={() => setShowInfo(!showInfo)}
+                  variant='outline'
+                  size='lg'
+                >
+                  Deposit
+                </Button>
 
+                <Button
+                  onClick={() => setUnstakeShowInfo(!unstakeShowInfo)}
+                  variant='light'
+                  size='lg'
+                >
+                  Unstake
+                </Button>
+              </div>
               <Button
-                onClick={() => setUnstakeShowInfo(!unstakeShowInfo)}
-                variant='outline'
-                size='lg'
-                className='mt-20'
-              >
-                Unstake
-              </Button>
+                  onClick={() => setShowInfo(!showInfo)}
+                  variant='primary'
+                  size='lg'
+                >
+                  Claim
+                </Button>
             </div>
           </TabPanel>
         </TabPanels>
@@ -222,7 +232,7 @@ const PaymentTypes = () => {
           </div>
         </SlideUp>
       )}
-       {unstakeShowInfo && (
+      {unstakeShowInfo && (
         <SlideUp open={unstakeShowInfo} setOpen={setUnstakeShowInfo}>
           <div className='flex w-full flex-col items-center justify-between space-y-5 text-black'>
             <div className='relative h-56 w-96 select-none p-6'>

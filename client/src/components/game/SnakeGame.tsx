@@ -508,7 +508,7 @@ const SnakeGame: React.FC = () => {
           onClick={() => setInitialModalOpen(true)}
           className='bg-blue-500 hover:bg-blue-600 text-white rounded-md mt-4 p-2 px-5 w-fit focus:ring-blue-300'
         >
-          Deposit Amount ($10)
+          Deposit Amount
         </button>
       )}
 

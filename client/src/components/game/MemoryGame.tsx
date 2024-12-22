@@ -4,7 +4,7 @@ import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import React, { useState, useEffect } from 'react';
 import Button from '../buttons/Button';
 import { IoClose } from 'react-icons/io5';
-
+import { toast } from 'react-hot-toast';
 type Card = {
   id: number;
   value: string;
@@ -23,7 +23,13 @@ const MemoryGame: React.FC = () => {
   useQuizContext();
   const [gameOver, setGameOver] = useState(false);
   const [initialModalOpen, setInitialModalOpen] = useState(false);
+  const [playModalOpen, setPlayModalOpen] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [playAgainModalOpen, setPlayAgainModalOpen] = useState(false);
   const closeInitialModal = () => setInitialModalOpen(false);
+  const closeGameOverModal = () => setGameOver(false); // Adjust as needed
+  const closePlayAgainModal = () => setPlayAgainModalOpen(false);
+  const closePlayModal = () => setPlayModalOpen(false);
   useEffect(() => {
     // Initialize and shuffle cards
     const duplicatedCards = [...initialCards, ...initialCards].map((value, index) => ({
@@ -110,6 +116,43 @@ const MemoryGame: React.FC = () => {
     }
   }
 
+  const handleConfirmPlay = () => {
+    try {
+      if (deposit >= 40) {
+        setDeposit((prev: any) => prev - 40);
+        setGameStarted(true);
+        setPlayModalOpen(false);
+      } else {
+        toast.error('Not enough deposit to play.');
+      }
+    } catch (error) {
+      console.error('Error in handleConfirmPlay:', error);
+      toast.error('An error occurred while confirming play.');
+    }
+  };
+
+  const handlePlayAgain = () => {
+    try {
+      if (deposit >= 40) {
+        setPlayModalOpen(true);
+      } else {
+        if (deposit === 0 && stake === 0) {
+          setInitialModalOpen(true);
+        } else {
+          toast.error('Not enough deposit to play again.');
+        }
+      }
+      setPlayAgainModalOpen(false);
+    } catch (error) {
+      console.error('Error in handlePlayAgain:', error);
+      toast.error('An error occurred while handling play again.');
+    }
+  };
+
+  const handleCancelPlay = () => {
+    setPlayModalOpen(false);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen  text-white p-6">
       <h1 className="text-white mb-4 text-center text-4xl font-bold">Memory Matching</h1>
@@ -159,7 +202,7 @@ const MemoryGame: React.FC = () => {
 
         {initialModalOpen && !gameOver && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+          <div className='relative w-[85%] max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
             <IoClose onClick={closeInitialModal} />
             <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500'>
               Choose Deposit & Stake Amount
@@ -168,34 +211,132 @@ const MemoryGame: React.FC = () => {
               Select an amount to deposit and stake:
             </p>
             <div className='flex flex-col gap-2'>
-              <button
-                onClick={() => handleSelectAmount(10)}
-                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
+              <Button
+                onClick={() => handleSelectAmount(100)}
+                variant='light'
+                
               >
-                $10
+                $100
+              </Button>
+              <Button
+                onClick={() => handleSelectAmount(150)}
+                variant='light'
+                
+              >
+                $150
+              </Button>
+              <Button
+                onClick={() => handleSelectAmount(200)}
+                variant='light'
+                
+              >
+                $200
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+{deposit >= 40 && !gameStarted && !gameOver && (
+        <Button
+          onClick={() => setPlayAgainModalOpen(true)}
+          variant='outlined-shadow'
+          className='mb-4'
+          
+        >
+          Play
+        </Button>
+      )}
+ 
+   {playModalOpen && !gameStarted && !gameOver && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <IoClose onClick={closePlayModal} />
+            <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500'>
+              Ready to Play?
+            </h2>
+            <p className='mb-4 text-center text-gray-700 dark:text-gray-300'>
+              You need to pay <span className='font-bold'>10 USD</span> from
+              your deposit to start.
+            </p>
+            <div className='flex justify-center gap-4'>
+              <button
+                onClick={handleConfirmPlay}
+                className='btn bg-green-500 hover:bg-green-600 focus:ring-green-300 rounded-lg px-4 py-2'
+              >
+                Confirm
               </button>
               <button
-                onClick={() => handleSelectAmount(15)}
-                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
+                onClick={handleCancelPlay}
+                className='btn btn-gray-500 hover:bg-gray-600 focus:ring-gray-300 rounded-lg px-4 py-2'
               >
-                $15
-              </button>
-              <button
-                onClick={() => handleSelectAmount(20)}
-                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
-              >
-                $20
+                Cancel
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* Game Over Modal */}
+      {gameOver && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <IoClose onClick={closeGameOverModal} />
+            <h2 className='text-red-500 mb-4 text-center text-2xl font-semibold'>
+              Game Over
+            </h2>
+            
+            <div className='flex flex-col items-center gap-4'>
+              <button
+                onClick={resetGame}
+                className='bg-blue-500 hover:bg-blue-600 focus:ring-blue-300 w-full rounded-lg px-4 py-2'
+              >
+                Play Again
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Play Again Modal */}
+      {playAgainModalOpen && !gameOver && !gameStarted && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
+          <div className='relative w-[85%] max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+            <IoClose onClick={closePlayAgainModal} />
+            <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500 '>
+              Play Again?
+            </h2>
+            <p className='mb-4 text-center text-gray-700 dark:text-gray-300'>
+              You have enough funds to start a new game. Would you like to
+              continue?
+            </p>
+            <div className='flex justify-center gap-4'>
+              <button
+                onClick={handlePlayAgain}
+                className='btn bg-green-500 hover:bg-green-600 focus:ring-green-300 rounded-lg px-4 py-2'
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setPlayAgainModalOpen(false)}
+                className='btn bg-gray-500 hover:bg-gray-600 focus:ring-gray-300 rounded-lg px-4 py-2'
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {deposit < 40 && !gameStarted && !gameOver && (
         <Button
-          className="mt-1 px-6 py-3 text-white rounded-lg transition-colors duration-300"
-          onClick={resetGame}
+          onClick={() => setInitialModalOpen(true)}
+          variant='light'
+         
         >
-          Restart Game
+          Deposit Amount
         </Button>
+      )}
+      
       </div>
     </div>
   );

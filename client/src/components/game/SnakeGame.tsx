@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { toast } from 'react-hot-toast';
 import { IoClose } from 'react-icons/io5';
+import Button from '../buttons/Button';
 
 
 type Position = {
@@ -377,7 +378,7 @@ const SnakeGame: React.FC = () => {
       {/* Initial Modal: Choose Deposit & Stake Amount */}
       {initialModalOpen && !gameOver && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
-          <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
+          <div className='relative w-[85%] max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
             <IoClose onClick={closeInitialModal} />
             <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500'>
               Choose Deposit & Stake Amount
@@ -386,24 +387,27 @@ const SnakeGame: React.FC = () => {
               Select an amount to deposit and stake:
             </p>
             <div className='flex flex-col gap-2'>
-              <button
-                onClick={() => handleSelectAmount(10)}
-                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
+              <Button
+                onClick={() => handleSelectAmount(100)}
+                variant='light'
+                
               >
-                $10
-              </button>
-              <button
-                onClick={() => handleSelectAmount(15)}
-                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
+                $100
+              </Button>
+              <Button
+                onClick={() => handleSelectAmount(150)}
+                variant='light'
+                
               >
-                $15
-              </button>
-              <button
-                onClick={() => handleSelectAmount(20)}
-                className='bg-blue-500 rounded-md py-1 hover:bg-blue-600 focus:ring-blue-300 w-full'
+                $150
+              </Button>
+              <Button
+                onClick={() => handleSelectAmount(200)}
+                variant='light'
+                
               >
-                $20
-              </button>
+                $200
+              </Button>
             </div>
           </div>
         </div>

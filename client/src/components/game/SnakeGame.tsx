@@ -4,10 +4,9 @@
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import React, { useEffect, useRef, useState } from 'react';
 
-import { toast } from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { IoClose } from 'react-icons/io5';
 import Button from '../buttons/Button';
-
 
 type Position = {
   x: number;
@@ -22,6 +21,7 @@ const SQUARE_SIZE = 20;
 const SnakeGame: React.FC = () => {
   const { deposit, stake, setDeposit, setStake, stakeYourAmount } =
     useQuizContext();
+    
   const total = deposit + stake;
   const [snake, setSnake] = useState<Position[]>([{ x: 5, y: 5 }]);
   const [food, setFood] = useState<Position>({ x: 10, y: 10 });
@@ -41,12 +41,56 @@ const SnakeGame: React.FC = () => {
   // Show play confirmation modal after choosing amount but before game starts
   const [playModalOpen, setPlayModalOpen] = useState(false);
 
-  // New state for "Play Again" modal
+  // "Play Again" modal
   const [playAgainModalOpen, setPlayAgainModalOpen] = useState(false);
 
   // Touch handling states
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const touchEndRef = useRef<{ x: number; y: number } | null>(null);
+
+  /**
+   * Resets the game board to its initial state, but doesn't open any modals automatically.
+   * Useful for both "No" (decline paying again) or just a direct restart scenario.
+   */
+  const resetGameState = () => {
+    setSnake([{ x: 5, y: 5 }]);
+    setFood({ x: 10, y: 10 });
+    setDirection('RIGHT');
+    setGameOver(false);
+    setPaused(false);
+    setScore(0);
+    setGameStarted(false);
+  };
+
+  /**
+   * Called when user chooses "Yes" in the Game Over modal.
+   * Deduct 10 from deposit if possible, then start a new game immediately.
+   */
+  const handleGameOverYes = () => {
+    try {
+      if (deposit >= 10) {
+        setDeposit((prev: number) => prev - 10);
+
+        // Now reset the board
+        resetGameState();
+        // Immediately start the game
+        setGameStarted(true);
+      } else {
+        toast.error('Not enough deposit to start a new game.');
+      }
+    } catch (error) {
+      console.error('Error in handleGameOverYes:', error);
+      toast.error('An error occurred while trying to start a new game.');
+    }
+  };
+
+  /**
+   * Called when user chooses "No" in the Game Over modal.
+   * Resets the game fully without automatically charging or showing new modals.
+   */
+  const handleGameOverNo = () => {
+    resetGameState();
+  };
 
   const handleKeyPress = (e: KeyboardEvent) => {
     if (!gameStarted) return;
@@ -79,6 +123,7 @@ const SnakeGame: React.FC = () => {
         break;
     }
 
+    // Check for collision with walls or self
     if (
       head.x < 0 ||
       head.y < 0 ||
@@ -94,7 +139,7 @@ const SnakeGame: React.FC = () => {
 
     newSnake.unshift(head);
 
-    // Check if snake eats food
+    // Check if snake eats the food
     if (head.x === food.x && head.y === food.y) {
       setScore((prevScore) => prevScore + POINTS_PER_FOOD);
       generateFood();
@@ -131,21 +176,20 @@ const SnakeGame: React.FC = () => {
         setDeposit((prevDeposit: any) => prevDeposit + reward);
       }
       setGameOver(true);
+      toast.error('Game Over! Your snake hit the wall or itself.');
     } catch (error) {
       console.error('Error in handleGameOver:', error);
       toast.error('An error occurred while handling game over.');
     }
   };
 
+  /**
+   * Restarts the game flow. If the deposit is >= 10, open the pay modal.
+   * Otherwise, if no funds at all, open the deposit modal.
+   */
   const restartGame = () => {
     try {
-      setSnake([{ x: 5, y: 5 }]);
-      setFood({ x: 10, y: 10 });
-      setDirection('RIGHT');
-      setGameOver(false);
-      setPaused(false);
-      setScore(0);
-      setGameStarted(false);
+      resetGameState();
 
       if (deposit >= 10) {
         setPlayModalOpen(true);
@@ -158,23 +202,35 @@ const SnakeGame: React.FC = () => {
     }
   };
 
+  /**
+   * Handles depositing and staking the selected amount.
+   */
   const handleSelectAmount = async (amount: number) => {
+    // Show a loading toast while depositing
+    const loadingToastId = toast.loading('Depositing...');
+
     try {
       console.log('Selected amount:', amount);
-      
+
       // Initiate staking process and wait for it to complete
       await stakeYourAmount(amount.toString());
+
       // Update state only after staking is successful
       setStake((prev: number) => prev + amount);
       setDeposit((prev: number) => prev + amount);
-      
+
       // Close modals
       setInitialModalOpen(false);
       setPlayModalOpen(true);
-      
+
+      // Show success message
+      toast.success('Amount Deposited successfully.');
     } catch (error: any) {
       console.error('Error in handleSelectAmount:', error);
       toast.error('An error occurred while selecting the amount.');
+    } finally {
+      // Dismiss the loading toast
+      toast.dismiss(loadingToastId);
     }
   };
 
@@ -252,19 +308,21 @@ const SnakeGame: React.FC = () => {
     touchEndRef.current = null;
   };
 
+  // Keyboard events
   useEffect(() => {
     document.addEventListener('keydown', handleKeyPress);
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [direction, paused, gameStarted]);
 
+  // Snake movement interval
   useEffect(() => {
     if (gameOver || paused || !gameStarted) return;
     const interval = setInterval(moveSnake, 200);
     return () => clearInterval(interval);
   }, [snake, direction, gameOver, paused, gameStarted]);
 
+  // Show deposit modal if no funds at all
   useEffect(() => {
-    // If no funds at all, open deposit modal
     if (deposit === 0 && stake === 0) {
       setInitialModalOpen(true);
     } else {
@@ -272,10 +330,10 @@ const SnakeGame: React.FC = () => {
     }
   }, [deposit, stake]);
 
-  // Functions to close modals
+  // Modal close helpers
   const closeInitialModal = () => setInitialModalOpen(false);
   const closePlayModal = () => setPlayModalOpen(false);
-  const closeGameOverModal = () => setGameOver(false); // Adjust as needed
+  const closeGameOverModal = () => setGameOver(false);
   const closePlayAgainModal = () => setPlayAgainModalOpen(false);
 
   return (
@@ -285,21 +343,23 @@ const SnakeGame: React.FC = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <h1 className='text-blue-500 mb-4 text-center text-4xl font-bold'>
+      <h1 className='mb-4 text-center text-4xl font-bold text-blue-500'>
         Snake Game
       </h1>
 
       <div className='mb-4 flex flex-wrap justify-center gap-4 text-center'>
         <div className='flex flex-col items-center'>
-          <span className='text-sm text-gray-600 dark:text-gray-400'>Deposit</span>
+          <span className='text-sm text-gray-600 dark:text-gray-400'>
+            Deposit
+          </span>
           <span className='text-lg font-semibold text-green-600 dark:text-green-400'>
-            {deposit}
+            {deposit.toFixed(2)}
           </span>
         </div>
         <div className='flex flex-col items-center'>
           <span className='text-sm text-gray-600 dark:text-gray-400'>Stake</span>
           <span className='text-lg font-semibold text-yellow-500 dark:text-yellow-400'>
-            {stake}
+            {stake.toFixed(2)}
           </span>
         </div>
         <div className='flex flex-col items-center'>
@@ -309,14 +369,18 @@ const SnakeGame: React.FC = () => {
           </span>
         </div>
         <div className='flex flex-col items-center'>
-          <span className='text-sm text-gray-600 dark:text-gray-400'>Target</span>
+          <span className='text-sm text-gray-600 dark:text-gray-400'>
+            Target
+          </span>
           <span className='text-lg font-semibold text-purple-500 dark:text-purple-400'>
             {TARGET_SCORE}
           </span>
         </div>
         <div className='flex flex-col items-center'>
           <span className='text-sm text-gray-600 dark:text-gray-400'>APR</span>
-          <span className='text-lg font-semibold text-indigo-500 dark:text-indigo-400'>10%</span>
+          <span className='text-lg font-semibold text-indigo-500 dark:text-indigo-400'>
+            10%
+          </span>
         </div>
       </div>
 
@@ -332,32 +396,32 @@ const SnakeGame: React.FC = () => {
         {snake.map((segment, index) => (
           <div
             key={index}
-            className='bg-green-500 border-green-700 absolute rounded-sm border'
+            className='absolute rounded-sm border bg-green-500 border-green-700'
             style={{
               width: SQUARE_SIZE,
               height: SQUARE_SIZE,
               top: segment.y * SQUARE_SIZE,
               left: segment.x * SQUARE_SIZE,
             }}
-          ></div>
+          />
         ))}
 
         <div
-          className='bg-red-500 border-red-700 absolute rounded-full border'
+          className='absolute rounded-full border bg-red-500 border-red-700'
           style={{
             width: SQUARE_SIZE,
             height: SQUARE_SIZE,
             top: food.y * SQUARE_SIZE,
             left: food.x * SQUARE_SIZE,
           }}
-        ></div>
+        />
       </div>
 
       {paused && gameStarted && !gameOver && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
           <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
             <IoClose onClick={() => setPaused(false)} />
-            <h2 className='text-yellow-500 mb-4 text-center text-2xl font-semibold'>
+            <h2 className='mb-4 text-center text-2xl font-semibold text-yellow-500'>
               Game Paused
             </h2>
             <p className='mb-4 text-center text-sm text-gray-500 dark:text-gray-400'>
@@ -366,7 +430,7 @@ const SnakeGame: React.FC = () => {
             <div className='flex justify-center'>
               <button
                 onClick={() => setPaused(false)}
-                className='btn bg-green-500 hover:bg-green-600 focus:ring-green-300 rounded-lg px-4 py-2'
+                className='btn rounded-lg bg-green-500 px-4 py-2 hover:bg-green-600 focus:ring-green-300'
               >
                 Resume
               </button>
@@ -387,25 +451,13 @@ const SnakeGame: React.FC = () => {
               Select an amount to deposit and stake:
             </p>
             <div className='flex flex-col gap-2'>
-              <Button
-                onClick={() => handleSelectAmount(100)}
-                variant='light'
-                
-              >
+              <Button onClick={() => handleSelectAmount(100)} variant='light'>
                 $100
               </Button>
-              <Button
-                onClick={() => handleSelectAmount(150)}
-                variant='light'
-                
-              >
+              <Button onClick={() => handleSelectAmount(150)} variant='light'>
                 $150
               </Button>
-              <Button
-                onClick={() => handleSelectAmount(200)}
-                variant='light'
-                
-              >
+              <Button onClick={() => handleSelectAmount(200)} variant='light'>
                 $200
               </Button>
             </div>
@@ -428,13 +480,13 @@ const SnakeGame: React.FC = () => {
             <div className='flex justify-center gap-4'>
               <button
                 onClick={handleConfirmPlay}
-                className='btn bg-green-500 hover:bg-green-600 focus:ring-green-300 rounded-lg px-4 py-2'
+                className='btn rounded-lg bg-green-500 px-4 py-2 hover:bg-green-600 focus:ring-green-300'
               >
                 Confirm
               </button>
               <button
                 onClick={handleCancelPlay}
-                className='btn btn-gray-500 hover:bg-gray-600 focus:ring-gray-300 rounded-lg px-4 py-2'
+                className='btn btn-gray-500 rounded-lg px-4 py-2 hover:bg-gray-600 focus:ring-gray-300'
               >
                 Cancel
               </button>
@@ -448,18 +500,29 @@ const SnakeGame: React.FC = () => {
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
           <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
             <IoClose onClick={closeGameOverModal} />
-            <h2 className='text-red-500 mb-4 text-center text-2xl font-semibold'>
+            <h2 className='mb-4 text-center text-2xl font-semibold text-red-500'>
               Game Over
             </h2>
             <p className='mb-4 text-center text-gray-700 dark:text-gray-300'>
               Your final score: {score}
             </p>
-            <div className='flex flex-col items-center gap-4'>
+            
+            {/* 
+              YES -> Pay 10 USD (if possible) and start a new game 
+              NO  -> Reset the game fully and close the modal 
+            */}
+            <div className='flex flex-row items-center gap-4'>
               <button
-                onClick={restartGame}
-                className='bg-blue-500 hover:bg-blue-600 focus:ring-blue-300 w-full rounded-lg px-4 py-2'
+                onClick={handleGameOverYes}
+                className='w-full rounded-lg bg-green-500 px-4 py-2 hover:bg-green-600 focus:ring-green-300'
               >
-                Play Again
+                Yes 
+              </button>
+              <button
+                onClick={handleGameOverNo}
+                className='w-full rounded-lg bg-gray-500 px-4 py-2 hover:bg-gray-600 focus:ring-gray-300'
+              >
+                No 
               </button>
             </div>
           </div>
@@ -471,7 +534,7 @@ const SnakeGame: React.FC = () => {
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'>
           <div className='relative w-full max-w-sm rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800'>
             <IoClose onClick={closePlayAgainModal} />
-            <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500 '>
+            <h2 className='mb-4 text-center text-2xl font-semibold text-blue-500'>
               Play Again?
             </h2>
             <p className='mb-4 text-center text-gray-700 dark:text-gray-300'>
@@ -481,13 +544,13 @@ const SnakeGame: React.FC = () => {
             <div className='flex justify-center gap-4'>
               <button
                 onClick={handlePlayAgain}
-                className='btn bg-green-500 hover:bg-green-600 focus:ring-green-300 rounded-lg px-4 py-2'
+                className='btn rounded-lg bg-green-500 px-4 py-2 hover:bg-green-600 focus:ring-green-300'
               >
                 Confirm
               </button>
               <button
                 onClick={() => setPlayAgainModalOpen(false)}
-                className='btn bg-gray-500 hover:bg-gray-600 focus:ring-gray-300 rounded-lg px-4 py-2'
+                className='btn rounded-lg bg-gray-500 px-4 py-2 hover:bg-gray-600 focus:ring-gray-300'
               >
                 Cancel
               </button>
@@ -500,7 +563,7 @@ const SnakeGame: React.FC = () => {
       {deposit >= 10 && !gameStarted && !gameOver && (
         <button
           onClick={() => setPlayAgainModalOpen(true)}
-          className='bg-blue-500 mt-7 w-1/2 rounded-lg px-4 py-2 hover:bg-blue-600 focus:ring-blue-300'
+          className='mt-7 w-1/2 rounded-lg bg-blue-500 px-4 py-2 hover:bg-blue-600 focus:ring-blue-300'
         >
           Play Again
         </button>
@@ -509,7 +572,7 @@ const SnakeGame: React.FC = () => {
       {deposit < 10 && !gameStarted && !gameOver && (
         <button
           onClick={() => setInitialModalOpen(true)}
-          className='bg-blue-500 hover:bg-blue-600 text-white rounded-md mt-4 p-2 px-5 w-fit focus:ring-blue-300'
+          className='mt-4 w-fit rounded-md bg-blue-500 p-2 px-5 hover:bg-blue-600 focus:ring-blue-300'
         >
           Deposit Amount
         </button>
@@ -520,27 +583,27 @@ const SnakeGame: React.FC = () => {
         <div className='mt-4 flex flex-col items-center'>
           <button
             onClick={() => direction !== 'DOWN' && setDirection('UP')}
-            className='btn btn-indigo-500 mb-2 hover:bg-indigo-600 focus:ring-indigo-300 rounded-lg px-4 py-2'
+            className='btn mb-2 rounded-lg bg-indigo-500 px-4 py-2 hover:bg-indigo-600 focus:ring-indigo-300'
           >
             ↑ Up
           </button>
           <div className='flex gap-2'>
             <button
               onClick={() => direction !== 'RIGHT' && setDirection('LEFT')}
-              className='btn btn-indigo-500 hover:bg-indigo-600 focus:ring-indigo-300 rounded-lg px-4 py-2'
+              className='btn rounded-lg bg-indigo-500 px-4 py-2 hover:bg-indigo-600 focus:ring-indigo-300'
             >
               ← Left
             </button>
             <button
               onClick={() => direction !== 'LEFT' && setDirection('RIGHT')}
-              className='btn btn-indigo-500 hover:bg-indigo-600 focus:ring-indigo-300 rounded-lg px-4 py-2'
+              className='btn rounded-lg bg-indigo-500 px-4 py-2 hover:bg-indigo-600 focus:ring-indigo-300'
             >
               → Right
             </button>
           </div>
           <button
             onClick={() => direction !== 'UP' && setDirection('DOWN')}
-            className='btn btn-indigo-500 mt-2 hover:bg-indigo-600 focus:ring-indigo-300 rounded-lg px-4 py-2'
+            className='btn mt-2 rounded-lg bg-indigo-500 px-4 py-2 hover:bg-indigo-600 focus:ring-indigo-300'
           >
             ↓ Down
           </button>

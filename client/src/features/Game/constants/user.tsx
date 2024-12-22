@@ -29,26 +29,26 @@ export const games = [
     amountToDeposit: 40,
     description:"A Classic Memory Matching Game. Match the cards to win.",
     points: 4000,
-    redirectUrl:"/piano"
+    redirectUrl:"/memory"
  
   },
-  {
-    name: 'Pin the Needle',
-    gifSrc: 'https://149493502.v2.pressablecdn.com/wp-content/uploads/2015/02/aa-level-24-screenshot.jpg',
-    amountToDeposit: 20,
-    description:"A Classic Pin the Needle Game. Tap to pin the needle and avoid hitting the other needles.",
-    points: 4000,
-    redirectUrl:"/flappy-bird"
+  // {
+  //   name: 'Pin the Needle',
+  //   gifSrc: 'https://149493502.v2.pressablecdn.com/wp-content/uploads/2015/02/aa-level-24-screenshot.jpg',
+  //   amountToDeposit: 20,
+  //   description:"A Classic Pin the Needle Game. Tap to pin the needle and avoid hitting the other needles.",
+  //   points: 4000,
+  //   redirectUrl:"/flappy-bird"
  
-  },
-  {
-    name: 'Pin Ball',
-    gifSrc: 'https://media0.giphy.com/media/l4HnZvdrGVGpv2Vm8/giphy.gif?cid=6c09b9524zgfltn9x0i2cesu59zlu6cx1395kvvi5f58qser&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g',
-    amountToDeposit: 30,
-    description:"A Classic Pin Ball Game. Tap to pin the ball and avoid hitting the other balls.",
-    points: 4000,
-    redirectUrl:"/flappy-bird"
+  // },
+  // {
+  //   name: 'Pin Ball',
+  //   gifSrc: 'https://media0.giphy.com/media/l4HnZvdrGVGpv2Vm8/giphy.gif?cid=6c09b9524zgfltn9x0i2cesu59zlu6cx1395kvvi5f58qser&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g',
+  //   amountToDeposit: 30,
+  //   description:"A Classic Pin Ball Game. Tap to pin the ball and avoid hitting the other balls.",
+  //   points: 4000,
+  //   redirectUrl:"/flappy-bird"
  
-  },
+  // },
 ];
 

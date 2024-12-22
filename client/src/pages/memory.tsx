@@ -8,6 +8,7 @@ import { useTabsContext } from '@/features/Game/contexts/TabsContext'; // Import
 import TabGroup from '@/components/tabs/TabGroup';
 import Payment from '@/features/Game/components/payment/Payment';
 import MemoryGame from '@/components/game/MemoryGame';
+import LeaderBoard from '@/features/Game/components/leader-board/LeaderBoard';
 
 
 const Page = () => {
@@ -17,12 +18,14 @@ const Page = () => {
     setIsClient(true);
   }, []);
 
+  console.log(selectedTab);
+
   const renderContent = () => {
-    if (selectedTab === 'piano-game') {
+    if (selectedTab === 'memory') {
       return <MemoryGame />;
     }
     if (selectedTab === 'home') {
-      return <MemoryGame/>;
+      return <LeaderBoard/>;
     }
     if (selectedTab === 'payment') {
       return <Payment/>;

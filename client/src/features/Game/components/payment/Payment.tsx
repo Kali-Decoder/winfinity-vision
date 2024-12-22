@@ -16,11 +16,9 @@ import OutputSVG from '@/features/Game/components/payment/OutputSVG';
 import PaymentTypes from '@/features/Game/components/payment/PaymentTypes';
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import NextImage from '@/components/NextImage';
-import { useAccount } from 'wagmi';
-
+import TransactionBoardTable from '../Quiz/leader-board-table/TransactionBoardTable';
 const Payment = () => {
-  const account = useAccount();
-  const {deposit} = useQuizContext();
+  const { deposit } = useQuizContext();
   return (
     <div>
       {/* {Capacitor.getPlatform() == 'ios' ? (
@@ -78,25 +76,33 @@ const Payment = () => {
             </div>
           </Tab>
         </Tabs>
-        <div className='flex flex-grow flex-col items-center gap-3 overflow-y-auto px-4'>
-          <NextImage
-            src='/images/demo-profile.png'
-            alt='Image placeholder'
-            className='relative h-32 w-32 rounded-full border-4 border-primary-500'
-            imgClassName='object-cover rounded-full'
-            fill
-          />
-          <span className='mt-4 block text-3xl'>{'Nikku.Dev'}</span>
-        </div>
-
-        <div className='text-gradient-primary mt-10 flex items-center justify-center gap-2'>
-          <h2 className='text-8xl'>{deposit}</h2>
-          <span className='text-4xl'>USDC</span>
-        </div>
 
         <TabPanels>
           <TabPanel>
+            <div className='flex flex-grow flex-col items-center gap-3 overflow-y-auto px-4'>
+              <NextImage
+                src='/images/demo-profile.png'
+                alt='Image placeholder'
+                className='relative h-32 w-32 rounded-full border-4 border-primary-500'
+                imgClassName='object-cover rounded-full'
+                fill
+              />
+              <span className='mt-4 block text-3xl'>{'Nikku.Dev'}</span>
+            </div>
+
+            <div className='text-gradient-primary mt-10 flex items-center justify-center gap-2'>
+              <h2 className='text-8xl'>{deposit}</h2>
+              <span className='text-4xl'>USDC</span>
+            </div>
             <PaymentTypes />
+          </TabPanel>
+          <TabPanel>
+            <div className='flex flex-grow flex-col items-center gap-3 overflow-y-auto px-4'>
+              <TransactionBoardTable
+                className='mt-8'
+                figureClassName='border'
+              />
+            </div>
           </TabPanel>
         </TabPanels>
       </TabGroup>

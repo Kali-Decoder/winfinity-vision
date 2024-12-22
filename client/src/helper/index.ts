@@ -3,7 +3,6 @@ import { uxuyWallet } from '@/wallets/uxuyWallet';
 import { opBNBTestnet, mainnet } from 'wagmi/chains';
 import {
   connectorsForWallets,
-  RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 
 import { createConfig, http } from 'wagmi';

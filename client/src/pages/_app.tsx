@@ -24,6 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             fontStack: 'system',
             overlayBlur: 'small',
           })}
+          showRecentTransactions={true}
         >
           {/* Provide contexts and render the page */}
           <QuizContextProvider>

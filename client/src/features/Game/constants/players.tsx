@@ -33,3 +33,24 @@ export const players = [
     country: 'Canada',
   },
 ];
+
+
+export const transactions =[
+  {
+    id: 1,
+    date: '2021-09-01',
+    amount: 100,
+    type: 'Deposit/Stake',
+    status: 'Completed',
+    hash:"0x1234567890"
+  },
+  {
+    id: 2,
+    date: '2021-09-02',
+    amount: 200,
+    type: 'Claim',
+    status: 'Completed',
+    hash:"0x1234567890"
+  }
+
+]

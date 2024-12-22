@@ -6,7 +6,7 @@ import {
   Quiz,
 } from '@/features/Game/types/Types';
 import { config } from '@/helper';
-import { toast } from 'react-hot-toast';
+import { toast } from 'react-toastify';
 import { parseEther } from 'ethers';
 import { PostQuestions } from '../types/Types';
 import { useAccount, useWriteContract, useReadContract } from 'wagmi';

@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </QuizContextProvider>
         </RainbowKitProvider>
       </QueryClientProvider>
-      <ToastContainer />
+      <ToastContainer position='top-center' />
     </WagmiProvider>
   );
 }

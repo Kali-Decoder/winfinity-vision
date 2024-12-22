@@ -3,7 +3,7 @@ import '@/styles/globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastContainer, toast } from 'react-toastify';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 
 import { WagmiProvider } from 'wagmi';
 import { config } from '@/helper';
@@ -16,7 +16,15 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>     
+        <RainbowKitProvider
+          theme={darkTheme({
+            accentColor: '#30b750',
+            accentColorForeground: 'black',
+            borderRadius: 'medium',
+            fontStack: 'system',
+            overlayBlur: 'small',
+          })}
+        >
           {/* Provide contexts and render the page */}
           <QuizContextProvider>
             <TabsContextProvider>

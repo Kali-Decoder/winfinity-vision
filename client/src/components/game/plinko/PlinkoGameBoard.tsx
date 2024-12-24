@@ -59,7 +59,7 @@ const PlinkoGameBoard: React.FC = () => {
           }
         },
         options: {
-          background: colors.background,
+          background: "#1A181A",
           hasBounds: true,
           width: worldWidth,
           height: worldHeight,

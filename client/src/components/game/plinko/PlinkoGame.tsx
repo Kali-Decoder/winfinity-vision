@@ -18,11 +18,9 @@ const PlinkoGame: React.FC = () => {
   }, [gamesRunning]);
 
   return (
-    <div className='bg-[#0f212e] flex w-full flex-col justify-center items-center'>
-      <div className='flex h-full w-[100%] bg-[#0f212e]'>
-       
+    <div className='bg-[#1A181A] flex w-full flex-col justify-center items-center'>
+      <div className='flex h-full w-[100%] bg-[#1A181A] justify-center items-center'>
           <PlinkoGameBoard/>
-       
       </div>
     </div>
   );

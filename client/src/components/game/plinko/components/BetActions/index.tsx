@@ -68,7 +68,7 @@ export function BetActions({
   }
 
   return (
-    <div className="relative h-1/2 w-[100%] flex-1 px-4 py-8">
+    <div className="relative h-1/2 w-[100%] flex-1 p-4">
       <div className="flex h-full flex-col gap-4 rounded-md bg-primary p-4 text-text md:justify-between">
       <span className="text-xs font-bold text-text md:text-base">
        Number of Rounds {inGameBallsCount}/15

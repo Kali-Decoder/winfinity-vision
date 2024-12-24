@@ -10,7 +10,6 @@ import {
   Runner,
   World
 } from 'matter-js';
-import multiplier0dot3Img from '../../../../public/images/multipliers/multiplier0.3.png';
 import { useCallback, useEffect, useState } from 'react'
 import { random } from '@/utils/random'
 import { BetActions } from './components/BetActions'

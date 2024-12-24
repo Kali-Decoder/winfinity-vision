@@ -114,6 +114,7 @@ const LeaderBoard = () => {
                       <span className='font-bold'>Leaderboard</span>
                     </div>
                   </Tab>
+                  
                 </Tabs>
               )}
               <TabPanels>

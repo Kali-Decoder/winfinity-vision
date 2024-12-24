@@ -1,24 +1,24 @@
 // multiplierImages
-import multiplier0dot3Img from '../../../../../public/images/multipliers/multiplier0.3.png';
-import multiplier0dot5Img from 'public/images/multipliers/multiplier0.5.png';
-import multiplier1dot5Img from 'public/images/multipliers/multiplier1.5.png';
-import multiplier1Img from 'public/images/multipliers/multiplier1.png';
-import multiplier10Img from 'public/images/multipliers/multiplier10.png';
-import multiplier110Img from 'public/images/multipliers/multiplier110.png';
-import multiplier15Img from 'public/images/multipliers/multiplier15.png';
-import multiplier18Img from 'public/images/multipliers/multiplier18.png';
-import multiplier2Img from 'public/images/multipliers/multiplier2.png';
-import multiplier25Img from 'public/images/multipliers/multiplier25.png';
-import multiplier3Img from 'public/images/multipliers/multiplier3.png';
-import multiplier33Img from 'public/images/multipliers/multiplier33.png';
-import multiplier41Img from 'public/images/multipliers/multiplier41.png';
-import multiplier5Img from 'public/images/multipliers/multiplier5.png';
-import multiplier88Img from 'public/images/multipliers/multiplier88.png';
+const multiplier0dot3Img = '/images/multipliers/multiplier0.3.png';
+const multiplier0dot5Img = '/images/multipliers/multiplier0.5.png';
+const multiplier1dot5Img = '/images/multipliers/multiplier1.5.png';
+const multiplier1Img = '/images/multipliers/multiplier1.png';
+const multiplier10Img = '/images/multipliers/multiplier10.png';
+const multiplier110Img = '/images/multipliers/multiplier110.png';
+const multiplier15Img = '/images/multipliers/multiplier15.png';
+const multiplier18Img = '/images/multipliers/multiplier18.png';
+const multiplier2Img = '/images/multipliers/multiplier2.png';
+const multiplier25Img = '/images/multipliers/multiplier25.png';
+const multiplier3Img = '/images/multipliers/multiplier3.png';
+const multiplier33Img = '/images/multipliers/multiplier33.png';
+const multiplier41Img = '/images/multipliers/multiplier41.png';
+const multiplier5Img = '/images/multipliers/multiplier5.png';
+const multiplier88Img = '/images/multipliers/multiplier88.png';
 // multiplierSoundEffects
-const multiplierBest = 'public/sounds/multiplier-best.wav';
-const multiplierGood = 'public/sounds/multiplier-good.wav';
-const multiplierLow = 'public/sounds/multiplier-low.wav';
-const multiplierRegular = 'public/sounds/multiplier-regular.wav';
+const multiplierBest = '/sounds/multiplier-best.wav';
+const multiplierGood = '/sounds/multiplier-good.wav';
+const multiplierLow = '/sounds/multiplier-low.wav';
+const multiplierRegular = '/sounds/multiplier-regular.wav';
 
 import { LinesType, MultiplierType, MultiplierValues } from '@/types/types';
 

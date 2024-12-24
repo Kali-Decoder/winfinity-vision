@@ -10,6 +10,7 @@ import {
   Runner,
   World
 } from 'matter-js';
+import multiplier0dot3Img from '../../../../public/images/multipliers/multiplier0.3.png';
 import { useCallback, useEffect, useState } from 'react'
 import { random } from '@/utils/random'
 import { BetActions } from './components/BetActions'
@@ -116,7 +117,7 @@ const PlinkoGameBoard: React.FC = () => {
     const addBall = useCallback(
       (ballValue: number) => {
         addInGameBall()
-        const ballSound = new Audio("public/sounds/ball.wav")
+        const ballSound = new Audio("/sounds/ball.wav")
         ballSound.volume = 0.2
         ballSound.currentTime = 0
         ballSound.play()
@@ -193,7 +194,8 @@ const PlinkoGameBoard: React.FC = () => {
   
     let lastMultiplierX: number =
       worldWidth / 2 - (pinsConfig.pinGap / 2) * lines - pinsConfig.pinGap
-  
+    
+   
     multipliers.forEach(multiplier => {
       const blockSize = 20 // height and width
       const multiplierBody = Bodies.rectangle(
@@ -208,7 +210,7 @@ const PlinkoGameBoard: React.FC = () => {
             sprite: {
               xScale: 1,
               yScale: 1,
-              texture: multiplier.img
+              texture:multiplier.img
             }
           }
         }

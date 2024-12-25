@@ -37,10 +37,10 @@ const NFTThumbnail = ({ NFTFlowId, showPrice, className, ...rest }: Props) => {
         <div className='absolute -bottom-0 left-2/4 h-16 w-[calc(66.66666%+4px)] -translate-x-2/4 rounded-t-3xl border-2 border-b-0  border-primary-500'></div>
         <div className='flex w-full flex-col items-center self-start'>
           <span className='h2'>
-            {NFTInfo.NFTName ? NFTInfo.NFTName : 'Loading...'}
+            Nikku.Dev
           </span>
           <p className='text-center text-[10px]'>
-            {NFTInfo.NFTDescription ? NFTInfo.NFTDescription : 'Loading...'}
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere libero vel nesciunt provident voluptatem explicabo officia quo exercitationem incidunt veniam.
           </p>
           <video
             webkit-playsinline={true}
@@ -53,7 +53,7 @@ const NFTThumbnail = ({ NFTFlowId, showPrice, className, ...rest }: Props) => {
           />
         </div>
       </div>
-      {showPrice && (
+      {true && (
         <div className='flex w-full justify-center'>
           <div className='relative -top-14 flex w-3/5 items-center justify-center rounded-3xl bg-white py-5'>
             <div className='flex gap-1 text-black'>

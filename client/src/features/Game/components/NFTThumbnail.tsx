@@ -16,7 +16,7 @@ type Props = {
   };
 } & React.ComponentPropsWithRef<'div'>;
 
-type Tabs = 'home' | 'leader-board' | 'payment' | 'profile' | 'snake-game';
+type Tabs = 'home' | 'money-bag' | 'payment' | 'profile';
 
 const NFTThumbnail: React.FC<Props> = ({
   showPrice = false,

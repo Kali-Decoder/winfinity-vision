@@ -10,10 +10,11 @@ export const menuItems = [
     path: '/',
     icon: <TiHomeOutline />,
   },
-  // {
-  //   name: 'leader-board',
-  //   icon: <CiMedal />,
-  // },
+  {
+    name: 'money-bag',
+    path:'/',
+    icon: <MoneyBag />,
+  },
   {
     name: 'payment',
     path: '/',

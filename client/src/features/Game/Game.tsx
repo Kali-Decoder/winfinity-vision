@@ -23,6 +23,7 @@ import {
 } from '@/features/Game/constants/quizzes';
 import { useQuizContext } from '@/features/Game/contexts/QuizContext';
 import { useTabsContext } from '@/features/Game/contexts/TabsContext';
+import MoneyBagComponent from './components/money-bag/MoneyBag';
 
 export const home = () => {
   const {
@@ -155,13 +156,14 @@ const Game = () => {
    
 
   const renderGame = () => {
-    if (activeQuiz) return <Quiz />;
-    if (showInviteFriends)
-      return <InviteFriends setOpen={setShowInviteFriends} />;
+    // if (activeQuiz) return <Quiz />;
+    // if (showInviteFriends)
+    //   return <InviteFriends setOpen={setShowInviteFriends} />;
     if (selectedTab === 'home') return <LeaderBoard />;
     if (selectedTab === 'leader-board') return home();
     if (selectedTab === 'payment') return <Payment />;
-    if (selectedTab === 'profile') return <Profile />;
+    if (selectedTab === 'money-bag') return <MoneyBagComponent />;
+    // if (selectedTab === 'profile') return <Profile />;
     return null;
   };
 

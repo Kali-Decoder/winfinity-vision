@@ -32,6 +32,15 @@ export const games = [
     redirectUrl:"/memory"
  
   },
+  {
+    name: 'Plinko Game',
+    gifSrc: 'https://media.tenor.com/klkckiLg6e4AAAAM/plinko-stake.gif',
+    amountToDeposit: 40,
+    description:"Plinko is a chance-based game where a ball drops through a peg-filled board, landing in slots with varying rewards.",
+    points: 4000,
+    redirectUrl:"/plinko"
+ 
+  },
   // {
   //   name: 'Pin the Needle',
   //   gifSrc: 'https://149493502.v2.pressablecdn.com/wp-content/uploads/2015/02/aa-level-24-screenshot.jpg',

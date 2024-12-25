@@ -107,66 +107,59 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   }, [stake]);
 
   async function stakeYourAmount(amount: string) {
-    let id = toast.loading('Depositing in progress');
     try {
-      const amountEther = parseEther(amount); // Parse the amount to Ether
-      const allowance = await readContract(config, {
-        address: tokenAddress,
-        abi: tokenAbi,
-        functionName: 'allowance',
-        args: [address, mainContractAddress],
-      });
+        const amountEther = parseEther(amount); // Parse the amount to Ether
 
-      if (Number(allowance) < Number(amountEther.toString())) {
-        const approveTx = await writeContractAsync(
-          {
+        // Check allowance
+        const allowance = await readContract(config, {
             address: tokenAddress,
             abi: tokenAbi,
-            functionName: 'approve',
-            args: [mainContractAddress, amountEther],
-          },
-          {
-            onSuccess(data) {
-              toast.success('Approval successful');
-            },
-            onError(error) {
-              throw new Error('Approval failed');
-            },
-            onSettled(data, error) {
-              // You can perform additional actions here if needed
-              console.log('Approval settled');
-            },
-          }
-        );
-      }
-      const stakeTx = await writeContractAsync(
-        {
-          address: mainContractAddress,
-          abi: mainContractABI,
-          functionName: 'stake',
-          args: [amountEther],
-        },
-        {
-          onSuccess(data) {
-            console.log('data', data);
-            getStake();
-            toast.success('Deposit successful',{id});
-          },
-          onError(error) {
-            console.log('error', error);
-            throw new Error('Staking failed');
-          },
-          onSettled(data, error) {
-            // You can perform additional actions here if needed
-            console.log('Approval settled');
-          },
+            functionName: 'allowance',
+            args: [address, mainContractAddress],
+        });
+
+        // If allowance is insufficient, approve it
+        if (Number(allowance) < Number(amountEther.toString())) {
+            await toast.promise(
+                writeContractAsync(
+                    {
+                        address: tokenAddress,
+                        abi: tokenAbi,
+                        functionName: 'approve',
+                        args: [mainContractAddress, amountEther],
+                    }
+                ),
+                {
+                    pending: 'Approval in progress...',
+                    success: 'Approval successful 👌',
+                    error: 'Approval failed 🤯',
+                }
+            );
         }
-      );
-      console.log('stakeTx', stakeTx);
+
+        // Perform staking
+        await toast.promise(
+            writeContractAsync(
+                {
+                    address: mainContractAddress,
+                    abi: mainContractABI,
+                    functionName: 'stake',
+                    args: [amountEther],
+                }
+            ),
+            {
+                pending: 'Staking in progress...',
+                success: 'Staking successful 👌',
+                error: 'Staking failed 🤯',
+            }
+        );
+        getStake();
     } catch (error) {
-      throw error;
+        console.error('Error:', error);
+        toast.error('An error occurred. Please try again.');
     }
-  }
+}
+
 
   async function getYieldAmount() {
     try {
@@ -231,67 +224,61 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
 
   async function unstakeYourAmount(amount: string) {
     try {
-      const amountEther = parseEther(amount);
-      const unstakeTx = await writeContractAsync(
-        {
-          address: mainContractAddress,
-          abi: mainContractABI,
-          functionName: 'unstake',
-          args: [amountEther],
-        },
-        {
-          onSuccess(data) {
-            console.log('data', data);
-            getStake();
-            toast.success('Unstaking successful');
-          },
-          onError(error) {
-            console.log('error', error);
-            throw new Error('Unstaking failed');
-          },
-          onSettled(data, error) {
-            // You can perform additional actions here if needed
-            console.log('Approval settled');
-          },
-        }
-      );
-      console.log('unstakeTx', unstakeTx);
-    } catch (error) {
-      throw error;
-    }
-  }
+        const amountEther = parseEther(amount);
 
-  async function claimYourAmount() {
-    let id = toast.loading('Claiming in progress');
-    try {
-      const claimTx = await writeContractAsync(
-        {
-          address: mainContractAddress,
-          abi: mainContractABI,
-          functionName: 'claim',
-          args: [],
-        },
-        {
-          onSuccess(data) {
-            console.log('data', data);
-            getStake();
-            toast.success('Claim successful',{id});
-          },
-          onError(error) {
-            console.log('error', error);
-            throw new Error('Claim failed');
-          },
-          onSettled(data, error) {
-            // You can perform additional actions here if needed
-            console.log('Approval settled');
-          },
-        }
-      );
-      console.log('claimTx', claimTx);
+        // Perform unstaking with toast.promise
+        await toast.promise(
+            writeContractAsync(
+                {
+                    address: mainContractAddress,
+                    abi: mainContractABI,
+                    functionName: 'unstake',
+                    args: [amountEther],
+                }
+            ),
+            {
+                pending: 'Unstaking in progress...',
+                success: 'Unstaking successful 👌',
+                error: 'Unstaking failed 🤯',
+            }
+        );
+
+        // Fetch updated stake info after unstaking
+        getStake();
     } catch (error) {
-      throw error;
+        console.error('Error during unstaking:', error);
+        toast.error('An error occurred while unstaking. Please try again.');
     }
+}
+
+
+async function claimYourAmount() {
+  try {
+      // Perform claim operation with toast.promise
+      await toast.promise(
+          writeContractAsync(
+              {
+                  address: mainContractAddress,
+                  abi: mainContractABI,
+                  functionName: 'claim',
+                  args: [],
+              }
+          ),
+          {
+              pending: 'Claiming in progress...',
+              success: 'Claim successful 👌',
+              error: 'Claim failed 🤯',
+          }
+      );
+
+      // Fetch updated stake info after claiming
+      getStake();
+  } catch (error) {
+      console.error('Error during claim:', error);
+      toast.error('An error occurred while claiming. Please try again.');
   }
+}
+
 
   useEffect(() => {
     getYieldAmount();

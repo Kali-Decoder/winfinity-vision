@@ -84,7 +84,7 @@ const DepositSection = () => {
           <input
             type='number'
             name='depositAmount'
-            value={depositAmount ? depositAmount.toFixed(2) : 0 }
+            value={depositAmount}
             onChange={(e: any) => setDepositAmount(e.target.value)}
             placeholder='Enter Amount'
             className='bg-background placeholder:text-text focus:border-purple w-full rounded-md border-2 border-blue-400 bg-transparent px-8 font-bold text-white transition-colors placeholder:font-bold focus:outline-none md:p-2'

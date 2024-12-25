@@ -38,9 +38,10 @@ type QuizContext = {
   setStake: React.Dispatch<React.SetStateAction<number>>;
   stakeYourAmount: (amount: string) => Promise<void>;
   yieldAmount: number;
-  getStake : () => Promise<void>;
+  getStake: () => Promise<void>;
   unstakeYourAmount: (amount: string) => Promise<void>;
   claimYourAmount: () => Promise<void>;
+  currentRewardPerToken: number;
 };
 
 export const QuizContext = React.createContext<QuizContext>({} as QuizContext);
@@ -58,6 +59,7 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   const { data: hash, writeContractAsync, status } = useWriteContract();
   const [yieldAmount, setYieldAmount] = useState<number>(0);
   const [activeQuiz, setActiveQuiz] = useState(false);
+  const [currentRewardPerToken, setCurrentRewardPerToken] = useState<number>(0);
   const [activeStep, setActiveStep] =
     useState<Quiz['activeStep']>('pre-questions');
   const [preQuestions, setPreQuestions] = useState<PreQuestions>({
@@ -105,9 +107,10 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
   }, [stake]);
 
   async function stakeYourAmount(amount: string) {
+    let id = toast.loading('Depositing in progress');
     try {
       const amountEther = parseEther(amount); // Parse the amount to Ether
-      const allowance = await readContract(config,{
+      const allowance = await readContract(config, {
         address: tokenAddress,
         abi: tokenAbi,
         functionName: 'allowance',
@@ -146,8 +149,8 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         {
           onSuccess(data) {
             console.log('data', data);
-             getStake();
-            toast.success('Staking successful');
+            getStake();
+            toast.success('Deposit successful',{id});
           },
           onError(error) {
             console.log('error', error);
@@ -165,7 +168,7 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  async function getYieldAmount(){
+  async function getYieldAmount() {
     try {
       const yieldAmount = await readContract(config, {
         address: mainContractAddress,
@@ -173,14 +176,45 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         functionName: 'currentUserRewards',
         args: [address],
       });
- 
-      setYieldAmount(Number(Number(yieldAmount).toString())/10**18);
+
+      setYieldAmount(Number(Number(yieldAmount).toString()) / 10 ** 18);
     } catch (error) {
-      console.log('error', error);  
+      console.log('error', error);
     }
   }
 
-  async function getStake(){
+  async function getCurrentRewardsPerToken() {
+    try {
+      const rewardPerToken = await readContract(config, {
+        address: mainContractAddress,
+        abi: mainContractABI,
+        functionName: 'currentRewardsPerToken',
+        args: [],
+      });
+      setCurrentRewardPerToken(
+        Number(Number(rewardPerToken).toString()) / 10 ** 18
+      );
+      console.log('rewardPerToken', rewardPerToken);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
+  async function getAccumulatedRewards() {
+    try {
+      const accumulatedRewards = await readContract(config, {
+        address: mainContractAddress,
+        abi: mainContractABI,
+        functionName: 'accumulatedRewards',
+        args: [address],
+      });
+      console.log('accumulatedRewards', accumulatedRewards);
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
+  async function getStake() {
     try {
       const stake = await readContract(config, {
         address: mainContractAddress,
@@ -189,9 +223,9 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         args: [address],
       });
       console.log('stake', stake);
-      setStake(Number(Number(stake).toString())/10**18);  
+      setStake(Number(Number(stake).toString()) / 10 ** 18);
     } catch (error) {
-      console.log('error', error);  
+      console.log('error', error);
     }
   }
 
@@ -222,12 +256,13 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         }
       );
       console.log('unstakeTx', unstakeTx);
-    }catch (error) {
+    } catch (error) {
       throw error;
     }
   }
 
   async function claimYourAmount() {
+    let id = toast.loading('Claiming in progress');
     try {
       const claimTx = await writeContractAsync(
         {
@@ -240,7 +275,7 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
           onSuccess(data) {
             console.log('data', data);
             getStake();
-            toast.success('Claim successful');
+            toast.success('Claim successful',{id});
           },
           onError(error) {
             console.log('error', error);
@@ -253,21 +288,18 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         }
       );
       console.log('claimTx', claimTx);
-      
     } catch (error) {
       throw error;
     }
   }
 
-  
   useEffect(() => {
-    const interval = setInterval(() => {
-      getYieldAmount();
-      getStake();
-    },30000);
-    return () => clearInterval(interval);
+    getYieldAmount();
+    getStake();
+    getCurrentRewardsPerToken();
+    // getAccumulatedRewards();
   }, [address]);
-  
+
   return (
     <QuizContext.Provider
       value={{
@@ -291,7 +323,8 @@ const QuizContextProvider = ({ children }: { children: ReactNode }) => {
         yieldAmount,
         getStake,
         unstakeYourAmount,
-        claimYourAmount
+        claimYourAmount,
+        currentRewardPerToken,
       }}
     >
       {children}

@@ -7,7 +7,6 @@ import { useQuizContext } from '../../contexts/QuizContext';
 
 const DepositSection = () => {
   const [depositAmount, setDepositAmount] = useState(0);
-  const [unstakeAmount, setUnstakeAmount] = useState(0);
   const [userBalance, setUserBalance] = useState(234);
 
   const {
@@ -16,8 +15,7 @@ const DepositSection = () => {
     stakeYourAmount,
     stake,
     deposit,
-    yieldAmount,
-    unstakeYourAmount,
+    currentRewardPerToken
   } = useQuizContext();
   const makeUserbalance = (percentage: any) => {
     const percentageValue = (percentage / 100) * userBalance;
@@ -46,6 +44,7 @@ const DepositSection = () => {
         <span className='h2 block font-secondary'>Deposit Funds !</span>
         <span className='font-secondary'>You Have {deposit} USDC Deposits</span>
         <span className='font-secondary'>You Have {stake} USDC Stakes</span>
+        <span className='font-secondary'>Rewards Per Token :  {currentRewardPerToken} USDC</span>
       </div>
 
       <div

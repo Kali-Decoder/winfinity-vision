@@ -74,6 +74,7 @@ const WithdrawSection = () => {
               'h1 my-auto  flex w-full items-center justify-center break-all text-center',
               'text-sm',
             ])}
+               
           >
             <CiMedal size={22} />
             Withdraw

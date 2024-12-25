@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 // import { AiOutlineSetting } from 'react-icons/ai';
 
 import Menu from '@/components/menu/Menu';
-import MoneyBag from '@/components/SVGs/MoneyBag';
+
 import Tab from '@/components/tabs/Tab';
 import TabGroup from '@/components/tabs/TabGroup';
 import TabPanel from '@/components/tabs/TabPanel';

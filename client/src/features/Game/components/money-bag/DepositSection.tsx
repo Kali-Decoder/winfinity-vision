@@ -1,10 +1,39 @@
 import { Capacitor } from '@capacitor/core';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useState } from 'react';
 import { CiMedal } from 'react-icons/ci';
 import clsxm from '@/lib/clsxm';
+import { useQuizContext } from '../../contexts/QuizContext';
 
 const DepositSection = () => {
+  const [depositAmount, setDepositAmount] = useState(0);
+  const [unstakeAmount, setUnstakeAmount] = useState(0);
+  const [userBalance, setUserBalance] = useState(234);
+
+  const {
+    setDeposit,
+    setStake,
+    stakeYourAmount,
+    stake,
+    deposit,
+    yieldAmount,
+    unstakeYourAmount,
+  } = useQuizContext();
+  const makeUserbalance = (percentage: any) => {
+    const percentageValue = (percentage / 100) * userBalance;
+    setDepositAmount(percentageValue);
+  };
+
+  const handleDeposit = async () => {
+    try {
+      console.log('depositAmount', depositAmount);
+      await stakeYourAmount(depositAmount.toString());
+      setStake((prev: any) => Number(prev) + Number(depositAmount));
+      setDeposit((prev: any) => Number(prev) + Number(depositAmount));
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div
       className={clsx(
@@ -13,9 +42,10 @@ const DepositSection = () => {
         'relative flex flex-col'
       )}
     >
-      <div className='text-gradient-primary flex w-full flex-col items-center gap-1'>
+      <div className='text-gradient-primary  flex w-full flex-col items-center gap-1'>
         <span className='h2 block font-secondary'>Deposit Funds !</span>
-        <span className='font-secondary'>You Get +2019 Quiz Points</span>
+        <span className='font-secondary'>You Have {deposit} USDC Deposits</span>
+        <span className='font-secondary'>You Have {stake} USDC Stakes</span>
       </div>
 
       <div
@@ -33,7 +63,7 @@ const DepositSection = () => {
               <select
                 // onChange={handleChangeLines}
                 defaultValue='USDC'
-                className='border-secondary placeholder:text-text focus:border-purple w-full rounded-md border-2 bg-transparent px-4 py-2 font-bold text-white border-blue-400 transition-all placeholder:font-bold focus:outline-none'
+                className='border-secondary placeholder:text-text focus:border-purple w-full rounded-md border-2 border-blue-400 bg-transparent px-4 py-2 font-bold text-white transition-all placeholder:font-bold focus:outline-none'
               >
                 <option value='USDC'>USDC</option>
                 <option value='SOL'>SOL</option>
@@ -45,7 +75,7 @@ const DepositSection = () => {
               <select
                 // onChange={handleChangeLines}
                 defaultValue='BNB'
-                className='border-secondary placeholder:text-text border-blue-400 focus:border-purple w-full rounded-md border-2 bg-transparent px-4 py-2 font-bold text-white  transition-all placeholder:font-bold focus:outline-none'
+                className='border-secondary placeholder:text-text focus:border-purple w-full rounded-md border-2 border-blue-400 bg-transparent px-4 py-2 font-bold text-white  transition-all placeholder:font-bold focus:outline-none'
               >
                 <option value='BNB'>BNB Network</option>
               </select>
@@ -54,13 +84,47 @@ const DepositSection = () => {
           <label className='mb-2'>Amount</label>
           <input
             type='number'
-            min={0}
-            max={100}
-            //   onChange={handleChangeBetValue}
-            //   value={betValue}
+            name='depositAmount'
+            value={depositAmount ? depositAmount.toFixed(2) : 0 }
+            onChange={(e: any) => setDepositAmount(e.target.value)}
             placeholder='Enter Amount'
             className='bg-background placeholder:text-text focus:border-purple w-full rounded-md border-2 border-blue-400 bg-transparent px-8 font-bold text-white transition-colors placeholder:font-bold focus:outline-none md:p-2'
           />
+          <div className='mt-3 flex space-x-2'>
+            <div
+              onClick={() => {
+                makeUserbalance(10);
+              }}
+              className='flex h-8 w-12  cursor-pointer items-center justify-center rounded-md bg-sky-200 text-xs font-bold text-blue-900 hover:bg-blue-300'
+            >
+              10%
+            </div>
+
+            <div
+              onClick={() => {
+                makeUserbalance(50);
+              }}
+              className='flex h-8 w-12  cursor-pointer items-center justify-center rounded-md bg-sky-200 text-xs font-bold text-blue-900 hover:bg-blue-300'
+            >
+              50%
+            </div>
+            <div
+              onClick={() => {
+                makeUserbalance(75);
+              }}
+              className='flex h-8 w-12  cursor-pointer items-center justify-center rounded-md bg-sky-200 text-xs font-bold text-blue-900 hover:bg-blue-300'
+            >
+              75%
+            </div>
+            <div
+              onClick={() => {
+                makeUserbalance(100);
+              }}
+              className='flex h-8 w-12  cursor-pointer items-center justify-center rounded-md bg-sky-200 text-xs font-bold text-blue-900 hover:bg-blue-300'
+            >
+              100%
+            </div>
+          </div>
         </div>
       </div>
 
@@ -72,6 +136,7 @@ const DepositSection = () => {
                 'h1 my-auto  flex w-full items-center justify-center break-all text-center',
                 'text-sm',
               ])}
+              onClick={handleDeposit}
             >
               <CiMedal size={22} />
               Deposit

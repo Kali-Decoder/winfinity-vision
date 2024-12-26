@@ -65,7 +65,7 @@ const LeaderBoard = () => {
                 imgClassName=' rounded-full'
                 fill
               />
-              <p className='mb-8 px-4 text-center text-6xl gap-y-4 game-font'>
+              <p className='mb-8 px-4 text-center text-4xl gap-y-4 game-font'>
             Where Gaming Meets Staking for Endless Rewards!
               </p>
               <ConnectButton />

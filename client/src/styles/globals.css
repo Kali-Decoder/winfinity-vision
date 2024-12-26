@@ -1,7 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Bokor&family=Cinzel:wght@400..900&family=Edu+AU+VIC+WA+NT+Guides:wght@400..700&family=Ga+Maamli&family=Press+Start+2P&family=Quicksand:wght@300..700&family=Rubik+Glitch&display=swap');
+.game-font{
+  font-family: "Bokor", serif;
+}
 :root {
   /* #region  /**=========== Primary Color =========== */
   /* green */

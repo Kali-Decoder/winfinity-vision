@@ -57,7 +57,7 @@ const LeaderBoard = () => {
         )}
         {!account?.address && (
           <>
-            <div className='!mt-2 flex h-[70vh] flex-col items-center justify-center gap-16'>
+            <div className='!mt-2 flex h-[85vh] flex-col items-center justify-center gap-16'>
               <NextImage
                 src='/images/logo2-removebg.png'
                 alt='logo'
@@ -65,9 +65,8 @@ const LeaderBoard = () => {
                 imgClassName=' rounded-full'
                 fill
               />
-              <p className='mb-8 px-4 text-center text-3xl leading-10'>
-                Endless Games, Infinite Rewards <br /> Play, <br /> Earn, and
-                Earn! 💰
+              <p className='mb-8 px-4 text-center text-6xl gap-y-4 game-font'>
+            Where Gaming Meets Staking for Endless Rewards!
               </p>
               <ConnectButton />
             </div>

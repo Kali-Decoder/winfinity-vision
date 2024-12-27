@@ -41,15 +41,15 @@ export const games = [
     redirectUrl:"/plinko"
  
   },
-  // {
-  //   name: 'Pin the Needle',
-  //   gifSrc: 'https://149493502.v2.pressablecdn.com/wp-content/uploads/2015/02/aa-level-24-screenshot.jpg',
-  //   amountToDeposit: 20,
-  //   description:"A Classic Pin the Needle Game. Tap to pin the needle and avoid hitting the other needles.",
-  //   points: 4000,
-  //   redirectUrl:"/flappy-bird"
+  {
+    name: 'Spin Wheel',
+    gifSrc: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEizhP2ir9-KhYlY1reCKpmYC19ktsb3e_BLCnTNogmT6h5EyKLpa9meBX87ipZbW9xXnH_N7hUUgewRjvlmMgEG6GuX8nxi9JFpbcpuHWqQUXhJDyHNNvIvrlXKXQHrG9sfMA1kU8_d5AEnPlhIaS19KNp1-7iP-vKWHQ3qoaFh-rl5HD99HessOcTekBU/s640/fortune-wheel1.gif',
+    amountToDeposit: 20,
+    description:"A Classic Pin the Needle Game. Tap to pin the needle and avoid hitting the other needles.",
+    points: 4000,
+    redirectUrl:"/spin-wheel"
  
-  // },
+  },
   // {
   //   name: 'Pin Ball',
   //   gifSrc: 'https://media0.giphy.com/media/l4HnZvdrGVGpv2Vm8/giphy.gif?cid=6c09b9524zgfltn9x0i2cesu59zlu6cx1395kvvi5f58qser&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g',

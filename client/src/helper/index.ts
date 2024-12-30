@@ -1,6 +1,6 @@
 import { Chain } from '@rainbow-me/rainbowkit';
 import { uxuyWallet } from '@/wallets/uxuyWallet';
-import { opBNBTestnet, mainnet } from 'wagmi/chains';
+import { opBNBTestnet, mainnet,flowTestnet } from 'wagmi/chains';
 import {
   connectorsForWallets,
 } from '@rainbow-me/rainbowkit';
@@ -11,7 +11,7 @@ import {
   walletConnectWallet,
   okxWallet,
 } from '@rainbow-me/rainbowkit/wallets';
-const chains: readonly [Chain, ...Chain[]] = [mainnet, opBNBTestnet];
+const chains: readonly [Chain, ...Chain[]] = [mainnet, opBNBTestnet,flowTestnet];
 const connectors = connectorsForWallets(
   [
     {
@@ -31,5 +31,6 @@ export const config = createConfig({
   transports: {
     [opBNBTestnet.id]: http('https://opbnb-testnet-rpc.bnbchain.org/'),
     [mainnet.id]: http('https://bsc-dataseed.binance.org/'),
+    [flowTestnet.id]: http('https://testnet.evm.nodes.onflow.org/'),
   },
 });

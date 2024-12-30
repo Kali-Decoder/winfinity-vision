@@ -1,31 +1,41 @@
 import { Capacitor } from '@capacitor/core';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useState } from 'react';
 import { CiMedal } from 'react-icons/ci';
 import clsxm from '@/lib/clsxm';
 import { useQuizContext } from '../../contexts/QuizContext';
 
 const WithdrawSection = () => {
+  const [unstakeAmount, setUnstakeAmount] = useState(0);
   const {
     claimYourAmount,
     stake,
     deposit,
     currentRewardPerToken,
-    yieldAmount
+    yieldAmount,
+    unstakeYourAmount
   } = useQuizContext();
 
   const handleClaimAmount = async () => {
     try {
-        await claimYourAmount();
+      await claimYourAmount();
     } catch (error) {
-        console.log(error);
+      console.log(error);
+    }
+  }
+
+  const handleUnstake = async () => {
+    try {
+      await unstakeYourAmount(unstakeAmount.toString());
+    } catch (error) {
+      console.log(error);
     }
   }
   return (
     <div
       className={clsx(
         Capacitor.getPlatform() === 'ios' &&
-          'mt-8 pt-[calc(env(safe-area-inset-bottom))]',
+        'mt-8 pt-[calc(env(safe-area-inset-bottom))]',
         'relative flex flex-col'
       )}
     >
@@ -72,16 +82,20 @@ const WithdrawSection = () => {
               </select>
             </div>
           </div>
-          <label className='mb-2'>Amount</label>
-          <input
-            type='number'
-            min={0}
-            max={100}
-            //   onChange={handleChangeBetValue}
-            //   value={betValue}
-            placeholder='Enter Amount'
-            className='bg-background placeholder:text-text focus:border-purple w-full rounded-md border-2 border-blue-400 bg-transparent px-8 font-bold text-white transition-colors placeholder:font-bold focus:outline-none md:p-2'
-          />
+          <div className='flex mb-2 mt-4 gap-4'>
+            <input
+              type='number'
+              name='unstakeAmount'
+              onChange={(e) => setUnstakeAmount(Number(e.target.value))}
+              value={unstakeAmount}
+              placeholder='Unstake Amount'
+              className='bg-background placeholder:text-text focus:border-purple w-2/3 rounded-md border-2 border-blue-400 bg-transparent px-8 font-bold text-white transition-colors placeholder:font-bold focus:outline-none md:p-2'
+            />
+
+            <button onClick={handleUnstake} className='bg-primary-500 mt-0 text-white rounded-md px-4 py-2'>
+              Unstake
+            </button>
+          </div>
         </div>
       </div>
 
@@ -94,7 +108,7 @@ const WithdrawSection = () => {
                 'text-sm',
               ])}
 
-              onClick = {handleClaimAmount}
+              onClick={handleClaimAmount}
             >
               <CiMedal size={22} />
               Claim

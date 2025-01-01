@@ -76,7 +76,7 @@ const DepositSection = () => {
                 defaultValue='BNB'
                 className='border-secondary placeholder:text-text focus:border-purple w-full rounded-md border-2 border-blue-400 bg-transparent px-4 py-2 font-bold text-white  transition-all placeholder:font-bold focus:outline-none'
               >
-                <option value='BNB'>Flow Network</option>
+                <option value='BNB'>BNB Network</option>
               </select>
             </div>
           </div>

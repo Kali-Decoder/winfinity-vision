@@ -349,10 +349,9 @@ export const mainContractABI =[
     "type": "function"
   }
 ];
-// export const mainContractAddress = '0x4d3cf8661b9b66e0d05d717db7bf41a0c6767fcd';
-// export const tokenAddress = '0xE7Af399C6fEc10DfC47029A28C71228D6E2fA978';
-export const mainContractAddress = '0x06d7841983A17bB370c5CDE5f67B1C6C1e8f77Ed';
-export const tokenAddress = '0xBFff78BB02925E4D8671D0d90B2a6330fcAedd87';
+export const mainContractAddress = '0x4d3cf8661b9b66e0d05d717db7bf41a0c6767fcd';
+export const tokenAddress = '0xE7Af399C6fEc10DfC47029A28C71228D6E2fA978';
+
 export const tokenAbi =[
 	{
 		"inputs": [
